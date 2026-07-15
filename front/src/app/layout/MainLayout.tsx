@@ -1,11 +1,12 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import Header from "../../widgets/header/Header";
 
 const MainLayout = () => {
+  // для иконок - npm install @ant-design/icons
   return (
     <>
+      <Header />
       <Outlet />
-      <Link to="/page1">page 1</Link>
-      <Link to="/page2">page 2</Link>
     </>
   );
 };

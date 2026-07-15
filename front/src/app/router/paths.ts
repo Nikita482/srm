@@ -1,5 +1,6 @@
 export const paths = {
   layout: "/",
-  page1: "/page1",
-  page2: "/page2",
+  income: "/income",
+  expenses: "/expenses",
+  goals: "/goals",
 };

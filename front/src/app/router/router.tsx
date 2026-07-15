@@ -1,8 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import { paths } from "./paths";
 import MainLayout from "../layout/MainLayout";
-import TestPage from "../../pages/testPage";
-import TestPage2 from "../../pages/testPage2";
+import IncomePage from "../../pages/Income";
+import ExpensesPage from "../../pages/Expenses";
+import GoalsPage from "../../pages/Goals";
+// import TestPage2 from "../../pages/testPage2";
+// import TestPage3 from "../../pages/testPage3";
 
 const router = createBrowserRouter([
   {
@@ -10,12 +13,16 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       {
-        path: paths.page1,
-        element: <TestPage />,
+        path: paths.income,
+        element: <IncomePage />,
       },
       {
-        path: paths.page2,
-        element: <TestPage2 />,
+        path: paths.expenses,
+        element: <ExpensesPage />,
+      },
+      {
+        path: paths.goals,
+        element: <GoalsPage />,
       },
     ],
   },
