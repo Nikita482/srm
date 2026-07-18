@@ -6,18 +6,20 @@ const Header = () => {
   const navigate = useNavigate();
   const items = [
     {
-      key: "/income",
-      label: "Доходы",
+      key: "/calendar",
+      label: "Календарь",
     },
     {
-      key: "/expenses",
-      label: "Расходы",
+      key: "/coffee",
+      label: "Кофейня",
     },
     {
       key: "/goals",
       label: "Цели",
     },
   ];
+
+  // добавить расоды доходы и тд
 
   return (
     <>
