@@ -168,16 +168,16 @@ const CoffeePage = () => {
     { title: "Зп", dataIndex: "salary" },
     { title: "Траты", dataIndex: "expenses" },
     { title: "Инкас", dataIndex: "collection" },
-    { title: "Заплатили", dataIndex: "comment" },
-    { title: "Комент", dataIndex: "paid" },
+    { title: "Заплатили", dataIndex: "paid" },
+    { title: "Комент", dataIndex: "comment" },
     { title: "Начислено", dataIndex: "accrued" },
     { title: "Осталось", dataIndex: "remaining" },
   ];
   const [selectedMonth, setSelectedMonth] = useState(
-    months[months.length - 1].id,
+    months[months.length - 1]?.id,
   );
 
-  // создание месяца
+  // тестовое создание месяца
   const createMonth = () => {
     const newMonth = {
       id: Date.now(),
@@ -199,10 +199,38 @@ const CoffeePage = () => {
   // поиск нужного месяца по id
   const currentMonth = months.find((month) => month.id === selectedMonth);
 
+  const addRow = (days: string[]) => {
+    const newRow = {
+      key: Date.now(),
+      date: days.join(", "),
+      salary: days.length * 2500,
+      expenses: 0,
+      collection: 0,
+      paid: 0,
+      comment: "",
+      accrued: 0,
+      remaining: 0,
+    };
+
+    setMonths((prev) =>
+      prev.map((month) =>
+        month.id === selectedMonth
+          ? {
+              ...month,
+              data: [...month.data, newRow],
+            }
+          : month,
+      ),
+    );
+  };
+
+  // console.log(months);
+
   return (
     <>
       <h1>CoffeePage - кофейня</h1>
       <button onClick={() => createMonth()}>new month</button>
+      <button onClick={() => addRow(["1", "2", "3"])}>add week</button>
       <Select
         style={{ width: 150 }}
         value={selectedMonth}
