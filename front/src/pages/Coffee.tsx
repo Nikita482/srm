@@ -187,6 +187,7 @@ const CoffeePage = () => {
       data: [],
     };
     setMonths((prev) => [...prev, newMonth]);
+    setSelectedMonth(newMonth.id);
   };
 
   // все месяца в селекте
