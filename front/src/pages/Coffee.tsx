@@ -123,6 +123,7 @@ const CoffeePage = () => {
     { title: "Начислено", dataIndex: "accrued" },
     { title: "Осталось", dataIndex: "remaining" },
   ];
+  const [selectedMonth, setSelectedMonth] = useState(null);
 
   // создание месяца
   const createMonth = () => {
@@ -136,11 +137,14 @@ const CoffeePage = () => {
     setMonths((prev) => [...prev, newMonth]);
   };
 
-  // выбор месяца
+  // все месяца в селекте
   const monthOptions = months.map((months) => ({
     value: months.id,
     label: months.month,
   }));
+
+  // поиск нужного месяца по id
+  const currentMonth = months.find((month) => month.id === selectedMonth);
 
   return (
     <>
@@ -150,8 +154,9 @@ const CoffeePage = () => {
         style={{ width: 150 }}
         defaultValue="месяц"
         options={monthOptions}
+        onChange={(value) => setSelectedMonth(value)}
       />
-      <Table columns={columns} dataSource={months[0].data} />
+      <Table columns={columns} dataSource={currentMonth?.data} />
     </>
   );
 };
