@@ -1,8 +1,32 @@
 import { DatePicker, Select, Table, Tag } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 const CoffeePage = () => {
+  useEffect(() => {
+    fetch("http://localhost:3000/users")
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  }, []);
+
+  const createUser = async () => {
+    const response = await fetch("http://localhost:3000/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "Nikita",
+      }),
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+  };
+
+  // ----------------------------------------------------
+
   // Число → date
   // Зп → salary
   // Траты → expenses
@@ -12,158 +36,7 @@ const CoffeePage = () => {
   // Начислено → accrued
   // Осталось → remaining
 
-  const [months, setMonths] = useState([
-    // {
-    //   id: 1,
-    //   month: "Июль 2026",
-    //   data: [
-    //     {
-    //       key: 1,
-    //       date: "6, 7",
-    //       salary: 5000,
-    //       expenses: 0,
-    //       collection: 800,
-    //       paid: 2200,
-    //       comment: "",
-    //       accrued: 3000,
-    //       remaining: 2000,
-    //     },
-    //     {
-    //       key: 2,
-    //       date: "15",
-    //       salary: 2500,
-    //       expenses: 150,
-    //       collection: 0,
-    //       paid: 0,
-    //       comment: "",
-    //       accrued: 0,
-    //       remaining: 5000,
-    //     },
-    //     {
-    //       key: 3,
-    //       date: "22, 23",
-    //       salary: 2500,
-    //       expenses: 0,
-    //       collection: 0,
-    //       paid: 0,
-    //       comment: "",
-    //       accrued: 0,
-    //       remaining: 5000,
-    //     },
-    //     {
-    //       key: 4,
-    //       date: "27, 28, 29, 30",
-    //       salary: 10000,
-    //       expenses: 0,
-    //       collection: 0,
-    //       paid: 0,
-    //       comment: "",
-    //       accrued: 0,
-    //       remaining: 5000,
-    //     },
-    //   ],
-    // },
-    // {
-    //   id: 2,
-    //   month: "Июнь 2026",
-    //   data: [
-    //     {
-    //       key: 1,
-    //       date: "5",
-    //       salary: 2500,
-    //       expenses: 0,
-    //       collection: 0,
-    //       paid: 0,
-    //       comment: "",
-    //       accrued: 0,
-    //       remaining: 2500,
-    //     },
-    //     {
-    //       key: 2,
-    //       date: "9, 11",
-    //       salary: 5000,
-    //       expenses: 150,
-    //       collection: 3000,
-    //       paid: 0,
-    //       comment: "ччч",
-    //       accrued: 2000,
-    //       remaining: 3000,
-    //     },
-    //     {
-    //       key: 3,
-    //       date: "16, 17, 20",
-    //       salary: 7500,
-    //       expenses: 0,
-    //       collection: 2000,
-    //       paid: 1000,
-    //       comment: "",
-    //       accrued: 3000,
-    //       remaining: 4500,
-    //     },
-    //     {
-    //       key: 4,
-    //       date: "25, 26, 27",
-    //       salary: 7500,
-    //       expenses: 0,
-    //       collection: 0,
-    //       paid: 5000,
-    //       comment: "",
-    //       accrued: 5000,
-    //       remaining: 2500,
-    //     },
-    //   ],
-    // },
-    // {
-    //   id: 3,
-    //   month: "Август 2026",
-    //   data: [
-    //     {
-    //       key: 1,
-    //       date: "5",
-    //       salary: 2500,
-    //       expenses: 0,
-    //       collection: 0,
-    //       paid: 0,
-    //       comment: "",
-    //       accrued: 0,
-    //       remaining: 2500,
-    //     },
-    //     {
-    //       key: 2,
-    //       date: "9, 11",
-    //       salary: 5000,
-    //       expenses: 150,
-    //       collection: 3000,
-    //       paid: 0,
-    //       comment: "ччч",
-    //       accrued: 2000,
-    //       remaining: 3000,
-    //     },
-    //     {
-    //       key: 3,
-    //       date: "16, 17, 20",
-    //       salary: 7500,
-    //       expenses: 0,
-    //       collection: 2000,
-    //       paid: 1000,
-    //       comment: "",
-    //       accrued: 3000,
-    //       remaining: 4500,
-    //     },
-    //     {
-    //       key: 4,
-    //       date: "25, 26, 27",
-    //       salary: 7500,
-    //       expenses: 0,
-    //       collection: 0,
-    //       paid: 5000,
-    //       comment: "",
-    //       accrued: 5000,
-    //       remaining: 2500,
-    //     },
-    //   ],
-    // },
-  ]);
+  const [months, setMonths] = useState([]);
   const columns = [
     { title: "Число", dataIndex: "date" },
     { title: "Зп", dataIndex: "salary" },
@@ -238,8 +111,14 @@ const CoffeePage = () => {
     setSelectedDate(null);
   };
 
+  // подумать че делать с фиксированой зп вдруг потом зп будет не фиксирования
+  // придумать как вписывать траты инкас закинули коменты
+  // придумать че делать с пагинацией или вообще убрать ее
+
   return (
     <>
+      <button onClick={() => createUser()}>click</button>
+
       <h1>CoffeePage - кофейня</h1>
       <input
         type="text"
@@ -276,17 +155,6 @@ const CoffeePage = () => {
           {day}
         </Tag>
       ))}
-      {/* {days.map((day) => (
-        <Tag
-          key={day}
-          closable
-          onClose={() => {
-            setDays((prev) => prev.filter((item) => item !== day));
-          }}
-        >
-          {day}
-        </Tag>
-      ))} */}
 
       <br />
 
@@ -304,3 +172,154 @@ const CoffeePage = () => {
 };
 
 export default CoffeePage;
+
+// {
+//   id: 1,
+//   month: "Июль 2026",
+//   data: [
+//     {
+//       key: 1,
+//       date: "6, 7",
+//       salary: 5000,
+//       expenses: 0,
+//       collection: 800,
+//       paid: 2200,
+//       comment: "",
+//       accrued: 3000,
+//       remaining: 2000,
+//     },
+//     {
+//       key: 2,
+//       date: "15",
+//       salary: 2500,
+//       expenses: 150,
+//       collection: 0,
+//       paid: 0,
+//       comment: "",
+//       accrued: 0,
+//       remaining: 5000,
+//     },
+//     {
+//       key: 3,
+//       date: "22, 23",
+//       salary: 2500,
+//       expenses: 0,
+//       collection: 0,
+//       paid: 0,
+//       comment: "",
+//       accrued: 0,
+//       remaining: 5000,
+//     },
+//     {
+//       key: 4,
+//       date: "27, 28, 29, 30",
+//       salary: 10000,
+//       expenses: 0,
+//       collection: 0,
+//       paid: 0,
+//       comment: "",
+//       accrued: 0,
+//       remaining: 5000,
+//     },
+//   ],
+// },
+// {
+//   id: 2,
+//   month: "Июнь 2026",
+//   data: [
+//     {
+//       key: 1,
+//       date: "5",
+//       salary: 2500,
+//       expenses: 0,
+//       collection: 0,
+//       paid: 0,
+//       comment: "",
+//       accrued: 0,
+//       remaining: 2500,
+//     },
+//     {
+//       key: 2,
+//       date: "9, 11",
+//       salary: 5000,
+//       expenses: 150,
+//       collection: 3000,
+//       paid: 0,
+//       comment: "ччч",
+//       accrued: 2000,
+//       remaining: 3000,
+//     },
+//     {
+//       key: 3,
+//       date: "16, 17, 20",
+//       salary: 7500,
+//       expenses: 0,
+//       collection: 2000,
+//       paid: 1000,
+//       comment: "",
+//       accrued: 3000,
+//       remaining: 4500,
+//     },
+//     {
+//       key: 4,
+//       date: "25, 26, 27",
+//       salary: 7500,
+//       expenses: 0,
+//       collection: 0,
+//       paid: 5000,
+//       comment: "",
+//       accrued: 5000,
+//       remaining: 2500,
+//     },
+//   ],
+// },
+// {
+//   id: 3,
+//   month: "Август 2026",
+//   data: [
+//     {
+//       key: 1,
+//       date: "5",
+//       salary: 2500,
+//       expenses: 0,
+//       collection: 0,
+//       paid: 0,
+//       comment: "",
+//       accrued: 0,
+//       remaining: 2500,
+//     },
+//     {
+//       key: 2,
+//       date: "9, 11",
+//       salary: 5000,
+//       expenses: 150,
+//       collection: 3000,
+//       paid: 0,
+//       comment: "ччч",
+//       accrued: 2000,
+//       remaining: 3000,
+//     },
+//     {
+//       key: 3,
+//       date: "16, 17, 20",
+//       salary: 7500,
+//       expenses: 0,
+//       collection: 2000,
+//       paid: 1000,
+//       comment: "",
+//       accrued: 3000,
+//       remaining: 4500,
+//     },
+//     {
+//       key: 4,
+//       date: "25, 26, 27",
+//       salary: 7500,
+//       expenses: 0,
+//       collection: 0,
+//       paid: 5000,
+//       comment: "",
+//       accrued: 5000,
+//       remaining: 2500,
+//     },
+//   ],
+// },
