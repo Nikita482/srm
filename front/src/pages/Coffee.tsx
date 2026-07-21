@@ -1,158 +1,15 @@
-// import { DatePicker, Select, Table, Tag } from "antd";
-// import { useState } from "react";
-// import dayjs from "dayjs";
-// import axios from "axios";
-
-// const CoffeePage = () => {
-//   const [months, setMonths] = useState([]);
-//   const columns = [
-//     { title: "Число", dataIndex: "date" },
-//     { title: "Зп", dataIndex: "salary" },
-//     { title: "Траты", dataIndex: "expenses" },
-//     { title: "Инкас", dataIndex: "collection" },
-//     { title: "Заплатили", dataIndex: "paid" },
-//     { title: "Комент", dataIndex: "comment" },
-//     { title: "Начислено", dataIndex: "accrued" },
-//     { title: "Осталось", dataIndex: "remaining" },
-//   ];
-//   const [selectedMonth, setSelectedMonth] = useState(
-//     months[months.length - 1]?.id,
-//   );
-//   const [monthName, setMonthName] = useState("");
-//   const [days, setDays] = useState([]);
-//   const [selectedDate, setSelectedDate] = useState(null);
-
-//   // создание месяца
-//   const createMonth = async () => {
-//     // test
-//     const newMonthFront = {
-//       id: Date.now(),
-//       month: monthName,
-//       data: [],
-//     };
-
-//     const newMonth = {
-//       month: monthName,
-//       data: [],
-//     };
-
-//     await axios.post("http://localhost:3000/coffee", newMonth);
-
-//     setMonths((prev) => [...prev, newMonth]); // ?
-//     setSelectedMonth(newMonthFront.id); // ?
-//     setMonthName(""); // ?
-//   };
-
-//   // все месяца в селекте
-//   const monthOptions = months.map((months) => ({
-//     value: months.id,
-//     label: months.month,
-//   }));
-
-//   // поиск нужного месяца по id
-//   const currentMonth = months.find((month) => month.id === selectedMonth);
-
-//   // добовление новой строки
-//   const addRow = (days: string[]) => {
-//     const newRow = {
-//       key: Date.now(),
-//       date: days.join(", "),
-//       salary: days.length * 3000,
-//       expenses: 0,
-//       collection: 0,
-//       paid: 0,
-//       comment: "",
-//       accrued: 0,
-//       remaining: 0,
-//     };
-
-//     setMonths((prev) =>
-//       prev.map((month) =>
-//         month.id === selectedMonth
-//           ? {
-//               ...month,
-//               data: [...month.data, newRow],
-//             }
-//           : month,
-//       ),
-//     );
-
-//     setDays([]);
-//   };
-
-//   // выбор дней недели для строки
-//   const handleDateChange = (date: dayjs.Dayjs | null) => {
-//     if (!date) return;
-
-//     setDays((prev) => [...prev, String(date.date())]);
-//     setSelectedDate(null);
-//   };
-
-//   return (
-//     <>
-//       <h1>CoffeePage - кофейня</h1>
-//       <input
-//         type="text"
-//         placeholder="имя месяца:"
-//         value={monthName}
-//         onChange={(e) => setMonthName(e.target.value)}
-//       />
-//       <button disabled={!monthName.trim()} onClick={() => createMonth()}>
-//         Добавить месяц
-//       </button>
-
-//       <br />
-
-//       <DatePicker
-//         value={selectedDate}
-//         format="D"
-//         onChange={handleDateChange}
-//         size="middle"
-//         allowClear={false}
-//       />
-//       <button
-//         onClick={() => addRow(days)}
-//         disabled={months.length === 0 || days.length === 0}
-//       >
-//         Добавить Неделю
-//       </button>
-
-//       {days.map((day) => (
-//         <Tag
-//           key={day}
-//           closable
-//           onClose={() => setDays((prev) => prev.filter((item) => item !== day))}
-//         >
-//           {day}
-//         </Tag>
-//       ))}
-
-//       <br />
-
-//       <Select
-//         style={{ width: 150 }}
-//         value={selectedMonth}
-//         options={monthOptions}
-//         onChange={(value) => setSelectedMonth(Number(value))}
-//       />
-//       <Table columns={columns} dataSource={currentMonth?.data} />
-
-//       <div style={{ height: "1000px" }}></div>
-//     </>
-//   );
-// };
-
-// export default CoffeePage;
-
-// -----------------------------------------------------
-
-import { DatePicker, Select, Table } from "antd";
+import { DatePicker, Select, Table, Tag } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
 
 const CoffeePage = () => {
   const columns = [
-    { title: "Число", dataIndex: "date" },
+    {
+      title: "Число",
+      dataIndex: "date",
+      render: (dates: string[]) => dates.join(", "),
+    },
     { title: "Зп", dataIndex: "salary" },
     { title: "Траты", dataIndex: "expenses" },
     { title: "Инкас", dataIndex: "cashCollection" },
@@ -164,6 +21,17 @@ const CoffeePage = () => {
   const [months, setMonths] = useState([]);
   const [monthName, setMonthName] = useState("");
   const [selectedMonth, setSelectedMonth] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [newRow, setNewRow] = useState({
+    date: [],
+    salary: 0,
+    expenses: 0,
+    cashCollection: 0,
+    paid: 0,
+    comment: "",
+    accrued: 0,
+    remaining: 0,
+  });
 
   // получение всех месяцев
   useEffect(() => {
@@ -173,6 +41,7 @@ const CoffeePage = () => {
       setMonths(reversedMonths);
 
       // выбрать последний месяц для селекта
+      if (reversedMonths.length === 0) return;
       setSelectedMonth(reversedMonths[0]._id);
     };
 
@@ -183,28 +52,7 @@ const CoffeePage = () => {
   const createMonth = async () => {
     const newMonth = {
       month: monthName,
-      data: [
-        // {
-        //   date: ["1", "2"],
-        //   salary: 6000,
-        //   expenses: 0,
-        //   cashCollection: 0,
-        //   paid: 1000,
-        //   comment: "",
-        //   accrued: 1000,
-        //   remaining: 5000,
-        // },
-        // {
-        //   date: ["1", "2"],
-        //   salary: 6000,
-        //   expenses: 0,
-        //   cashCollection: 0,
-        //   paid: 1000,
-        //   comment: "",
-        //   accrued: 1000,
-        //   remaining: 5000,
-        // },
-      ],
+      data: [],
     };
 
     const { data } = await axios.post("http://localhost:3000/coffee", newMonth);
@@ -212,6 +60,27 @@ const CoffeePage = () => {
     setMonths((prev) => [data, ...prev]);
     setSelectedMonth(data._id);
     setMonthName("");
+  };
+
+  // создание недели
+  const addRow = async () => {
+    if (!selectedMonth) return;
+
+    const { data } = await axios.post(
+      `http://localhost:3000/coffee/${selectedMonth}/row`,
+      newRow,
+    );
+
+    // обновляем месяц в months
+    setMonths((prev) =>
+      prev.map((month) => (month._id === selectedMonth ? data : month)),
+    );
+
+    // сбросить выброные дни недели
+    setNewRow((prev) => ({
+      ...prev,
+      date: [],
+    }));
   };
 
   // опции для селекта
@@ -223,7 +92,29 @@ const CoffeePage = () => {
   // ищу выбраный месяц
   const currentMonth = months.find((month) => month._id === selectedMonth);
 
-  console.log(selectedMonth);
+  // дообовляю дни в неделю
+  const handleDateChange = (date: dayjs.Dayjs | null) => {
+    if (!date) return;
+
+    const day = String(date.date());
+
+    setNewRow((prev) => ({
+      ...prev,
+      date: prev.date.includes(day) ? prev.date : [...prev.date, day],
+    }));
+
+    setSelectedDate(null);
+  };
+
+  // крестик у тегов
+  const removeDate = (day) => {
+    setNewRow((prev) => ({
+      ...prev,
+      date: prev.date.filter((item) => item !== day),
+    }));
+  };
+
+  // console.log(newRow.date);
 
   return (
     <>
@@ -234,33 +125,31 @@ const CoffeePage = () => {
         value={monthName}
         onChange={(e) => setMonthName(e.target.value)}
       />
-      <button onClick={() => createMonth()}>Добавить месяц</button>
+      <button onClick={() => createMonth()} disabled={!monthName.trim()}>
+        Добавить месяц
+      </button>
 
       <br />
 
       <DatePicker
-        // value={selectedDate}
         format="D"
-        // onChange={handleDateChange}
         size="middle"
         allowClear={false}
+        value={selectedDate}
+        onChange={handleDateChange}
       />
       <button
-      // onClick={() => addRow(days)}
-      // disabled={months.length === 0 || days.length === 0}
+        onClick={() => addRow()}
+        disabled={newRow.date.length === 0 || months.length === 0}
       >
         Добавить Неделю
       </button>
 
-      {/* {days.map((day) => (
-        <Tag
-          key={day}
-          closable
-          onClose={() => setDays((prev) => prev.filter((item) => item !== day))}
-        >
+      {newRow.date.map((day) => (
+        <Tag key={day} closable onClose={() => removeDate(day)}>
           {day}
         </Tag>
-      ))} */}
+      ))}
 
       <br />
 
@@ -268,7 +157,13 @@ const CoffeePage = () => {
         style={{ width: 150 }}
         value={selectedMonth}
         options={monthOptions}
-        onChange={(value) => setSelectedMonth(value)}
+        onChange={(value) => {
+          setSelectedMonth(value);
+          setNewRow((prev) => ({
+            ...prev,
+            date: [],
+          }));
+        }}
       />
       <Table columns={columns} dataSource={currentMonth?.data} rowKey="_id" />
 
