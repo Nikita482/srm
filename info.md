@@ -67,8 +67,161 @@ _ controllers/user.controller.js — нужен только для обрабо
 _ services/user.service.js — только бизнес-логика для controllers/
 _ scripts/createUser.js — это только инструменты разработчика, не функции приложения
 
-✅ Почистить db.js.
-✅ Создать models/Month.js.
-✅ Создать models/WorkRow.js.
-✅ Сделать POST /months.
-✅ Сделать GET /months.
+axios.get(url) — получить данные.
+axios.post(url, data) — создать запись.
+axios.put(url, data) — полностью обновить запись.
+axios.patch(url, data) — частично обновить запись.
+axios.delete(url) — удалить запись.
+
+// const x = [
+// {
+// id: 1,
+// month: "Июль 2026",
+// data: [
+// {
+// key: 1,
+// date: "6, 7",
+// salary: 5000,
+// expenses: 0,
+// collection: 800,
+// paid: 2200,
+// comment: "",
+// accrued: 3000,
+// remaining: 2000,
+// },
+// {
+// key: 2,
+// date: "15",
+// salary: 2500,
+// expenses: 150,
+// collection: 0,
+// paid: 0,
+// comment: "",
+// accrued: 0,
+// remaining: 5000,
+// },
+// {
+// key: 3,
+// date: "22, 23",
+// salary: 2500,
+// expenses: 0,
+// collection: 0,
+// paid: 0,
+// comment: "",
+// accrued: 0,
+// remaining: 5000,
+// },
+// {
+// key: 4,
+// date: "27, 28, 29, 30",
+// salary: 10000,
+// expenses: 0,
+// collection: 0,
+// paid: 0,
+// comment: "",
+// accrued: 0,
+// remaining: 5000,
+// },
+// ],
+// },
+// {
+// id: 2,
+// month: "Июнь 2026",
+// data: [
+// {
+// key: 1,
+// date: "5",
+// salary: 2500,
+// expenses: 0,
+// collection: 0,
+// paid: 0,
+// comment: "",
+// accrued: 0,
+// remaining: 2500,
+// },
+// {
+// key: 2,
+// date: "9, 11",
+// salary: 5000,
+// expenses: 150,
+// collection: 3000,
+// paid: 0,
+// comment: "ччч",
+// accrued: 2000,
+// remaining: 3000,
+// },
+// {
+// key: 3,
+// date: "16, 17, 20",
+// salary: 7500,
+// expenses: 0,
+// collection: 2000,
+// paid: 1000,
+// comment: "",
+// accrued: 3000,
+// remaining: 4500,
+// },
+// {
+// key: 4,
+// date: "25, 26, 27",
+// salary: 7500,
+// expenses: 0,
+// collection: 0,
+// paid: 5000,
+// comment: "",
+// accrued: 5000,
+// remaining: 2500,
+// },
+// ],
+// },
+// {
+// id: 3,
+// month: "Август 2026",
+// data: [
+// {
+// key: 1,
+// date: "5",
+// salary: 2500,
+// expenses: 0,
+// collection: 0,
+// paid: 0,
+// comment: "",
+// accrued: 0,
+// remaining: 2500,
+// },
+// {
+// key: 2,
+// date: "9, 11",
+// salary: 5000,
+// expenses: 150,
+// collection: 3000,
+// paid: 0,
+// comment: "ччч",
+// accrued: 2000,
+// remaining: 3000,
+// },
+// {
+// key: 3,
+// date: "16, 17, 20",
+// salary: 7500,
+// expenses: 0,
+// collection: 2000,
+// paid: 1000,
+// comment: "",
+// accrued: 3000,
+// remaining: 4500,
+// },
+// {
+// key: 4,
+// date: "25, 26, 27",
+// salary: 7500,
+// expenses: 0,
+// collection: 0,
+// paid: 5000,
+// comment: "",
+// accrued: 5000,
+// remaining: 2500,
+// },
+// ],
+// },
+// ];

@@ -1,6 +1,6 @@
-// createUser.js
-import User from "../models/User.js";
+// // createUser.js
+// import User from "../models/User.js";
 
-await User.create({ name: "test user" });
+// await User.create({ name: "test user" });
 
-console.log("User created");
+// console.log("User created");

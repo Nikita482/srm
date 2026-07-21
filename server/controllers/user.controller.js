@@ -1,4 +1,4 @@
-// services/user.service.js
+// controllers/user.controller.js
 import { getAllUsers, createNewUser } from "../services/user.service.js";
 
 // GET всех пользователей
