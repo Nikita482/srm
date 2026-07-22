@@ -60,6 +60,12 @@ const CoffeePage = () => {
     setMonths((prev) => [data, ...prev]);
     setSelectedMonth(data._id);
     setMonthName("");
+
+    // сбрасываю выбранные дни при создании месяца
+    setNewRow((prev) => ({
+      ...prev,
+      date: [],
+    }));
   };
 
   // создание недели
@@ -98,20 +104,30 @@ const CoffeePage = () => {
 
     const day = String(date.date());
 
-    setNewRow((prev) => ({
-      ...prev,
-      date: prev.date.includes(day) ? prev.date : [...prev.date, day],
-    }));
+    setNewRow((prev) => {
+      const newDays = prev.date.includes(day) ? prev.date : [...prev.date, day];
+
+      return {
+        ...prev,
+        salary: newDays.length * 3000,
+        date: newDays,
+      };
+    });
 
     setSelectedDate(null);
   };
 
   // крестик у тегов
-  const removeDate = (day) => {
-    setNewRow((prev) => ({
-      ...prev,
-      date: prev.date.filter((item) => item !== day),
-    }));
+  const removeDate = (day: string) => {
+    setNewRow((prev) => {
+      const newDays = prev.date.filter((item) => item !== day);
+
+      return {
+        ...prev,
+        salary: newDays.length * 3000,
+        date: newDays,
+      };
+    });
   };
 
   // console.log(newRow.date);
