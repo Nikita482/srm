@@ -1,7 +1,7 @@
 import { DatePicker, Select, Table, Tag } from "antd";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import dayjs from "dayjs";
+import { apiGetMonths, apiCreateMonth, apiAddRow } from "../api/coffee";
 
 const CoffeePage = () => {
   const columns = [
@@ -36,7 +36,7 @@ const CoffeePage = () => {
   // получение всех месяцев
   useEffect(() => {
     const getMonths = async () => {
-      const { data } = await axios.get("http://localhost:3000/coffee");
+      const data = await apiGetMonths();
       const reversedMonths = [...data].reverse();
       setMonths(reversedMonths);
 
@@ -55,7 +55,7 @@ const CoffeePage = () => {
       data: [],
     };
 
-    const { data } = await axios.post("http://localhost:3000/coffee", newMonth);
+    const data = await apiCreateMonth(newMonth);
 
     setMonths((prev) => [data, ...prev]);
     setSelectedMonth(data._id);
@@ -72,10 +72,7 @@ const CoffeePage = () => {
   const addRow = async () => {
     if (!selectedMonth) return;
 
-    const { data } = await axios.post(
-      `http://localhost:3000/coffee/${selectedMonth}/row`,
-      newRow,
-    );
+    const data = await apiAddRow(selectedMonth, newRow);
 
     // обновляем месяц в months
     setMonths((prev) =>
@@ -131,6 +128,15 @@ const CoffeePage = () => {
   };
 
   // console.log(newRow.date);
+
+  // подумать че делать с фиксированой зп вдруг потом зп будет не фиксирования
+  // придумать как вписывать траты инкас закинули коменты
+  // придумать че делать с пагинацией или вообще убрать ее
+
+  // че надо вынести:
+  // 2. columns
+  // 3. Типы
+  // 4. Функции handleDateChange и removeDate
 
   return (
     <>
