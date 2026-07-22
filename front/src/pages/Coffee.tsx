@@ -2,27 +2,15 @@ import { DatePicker, Select, Table, Tag } from "antd";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { apiGetMonths, apiCreateMonth, apiAddRow } from "../api/coffee";
+import type { Month, CoffeeRow } from "../types/coffee";
+import { columns } from "../constants/coffeeColumns";
 
 const CoffeePage = () => {
-  const columns = [
-    {
-      title: "Число",
-      dataIndex: "date",
-      render: (dates: string[]) => dates.join(", "),
-    },
-    { title: "Зп", dataIndex: "salary" },
-    { title: "Траты", dataIndex: "expenses" },
-    { title: "Инкас", dataIndex: "cashCollection" },
-    { title: "Заплатили", dataIndex: "paid" },
-    { title: "Комент", dataIndex: "comment" },
-    { title: "Начислено", dataIndex: "accrued" },
-    { title: "Осталось", dataIndex: "remaining" },
-  ];
-  const [months, setMonths] = useState([]);
+  const [months, setMonths] = useState<Month[]>([]);
   const [monthName, setMonthName] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [newRow, setNewRow] = useState({
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
+  const [newRow, setNewRow] = useState<CoffeeRow>({
     date: [],
     salary: 0,
     expenses: 0,
