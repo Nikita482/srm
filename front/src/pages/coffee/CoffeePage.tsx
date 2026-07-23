@@ -25,6 +25,7 @@ const CoffeePage = () => {
     monthName,
     selectedDate,
     editingRow,
+    selectedEditDate,
     clearDates,
     handleDateChange,
     removeDate,
@@ -32,6 +33,7 @@ const CoffeePage = () => {
     removeEditDate,
     setEditingRow,
     addEditDate,
+    setSelectedEditDate,
   } = useCoffeeForm();
 
   // создание месяца
@@ -63,12 +65,7 @@ const CoffeePage = () => {
     updateMonth(data);
   };
 
-  // подумать че делать с фиксированой зп вдруг потом зп будет не фиксирования
-  // придумать как вписывать траты инкас закинули коменты
-  // придумать че делать с пагинацией или вообще убрать ее
-  // когда я закончу и выложу куда то проект смогу ли я скинуть ссылку на проект что бы кто то тоже имел доступ к таблицам? если да то как это исправить? авторизация?
-
-  // console.log(newRow);
+  // console.log(editingRow);
   return (
     <>
       <div>
@@ -137,12 +134,23 @@ const CoffeePage = () => {
             <Card>
               <Space>
                 <p>Дни:</p>
-                {record?.date.map((day) => (
+                {editingRow?.date.map((day) => (
                   <Tag key={day} closable onClose={() => removeEditDate(day)}>
                     {day}
                   </Tag>
                 ))}
-                <Tag onClick={() => addEditDate()}>+</Tag>
+                <DatePicker
+                  placeholder="+ день"
+                  format="D"
+                  allowClear={false}
+                  value={selectedEditDate}
+                  onChange={(date) => {
+                    if (!date) return;
+
+                    addEditDate(String(date.date()));
+                    setSelectedEditDate(null);
+                  }}
+                />
 
                 <Button onClick={() => onSaveEditingRow(record._id)}>
                   Сохранить
@@ -159,3 +167,8 @@ const CoffeePage = () => {
 };
 
 export default CoffeePage;
+
+// подумать че делать с фиксированой зп вдруг потом зп будет не фиксирования
+// придумать как вписывать траты инкас закинули коменты
+// придумать че делать с пагинацией или вообще убрать ее
+// когда я закончу и выложу куда то проект смогу ли я скинуть ссылку на проект что бы кто то тоже имел доступ к таблицам? если да то как это исправить? авторизация?

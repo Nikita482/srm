@@ -16,6 +16,9 @@ export const useCoffeeForm = () => {
   const [monthName, setMonthName] = useState("");
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
   const [editingRow, setEditingRow] = useState<CoffeeRow | null>(null);
+  const [selectedEditDate, setSelectedEditDate] = useState<dayjs.Dayjs | null>(
+    null,
+  );
 
   // очистить дни
   const clearDates = () => {
@@ -73,13 +76,30 @@ export const useCoffeeForm = () => {
   };
 
   // добавление дней в неделю
-  const addEditDate = () => {};
+  const addEditDate = (day: string) => {
+    setEditingRow((prev) => {
+      if (!prev) return prev;
+
+      const newDays = prev.date.includes(day) ? prev.date : [...prev.date, day];
+
+      return {
+        ...prev,
+        date: newDays,
+        salary: newDays.length * 3000,
+      };
+    });
+
+    // includes(day)
+    // console.log(day);
+    // console.log(editingRow);
+  };
 
   return {
     newRow,
     monthName,
     selectedDate,
     editingRow,
+    selectedEditDate,
     clearDates,
     handleDateChange,
     removeDate,
@@ -87,5 +107,6 @@ export const useCoffeeForm = () => {
     removeEditDate,
     setEditingRow,
     addEditDate,
+    setSelectedEditDate,
   };
 };

@@ -1,4 +1,9 @@
-// CoffeeControls
+const CoffeeControls = () => {
+  return (
+    <>
+      <h1>CoffeeControls</h1>
+    </>
+  );
+};
 
-//constants
-// types
+export default CoffeeControls;
