@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { CoffeeRow } from "../../types/coffee";
+import type { CoffeeRow } from "../types/coffee";
 import dayjs from "dayjs";
 
 export const useCoffeeForm = () => {

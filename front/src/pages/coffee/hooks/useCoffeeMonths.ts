@@ -1,8 +1,8 @@
 // currentMonth
 
 import { useEffect, useState } from "react";
-import type { Month } from "../../types/coffee";
-import { apiCreateMonth, apiGetMonths } from "../../api/coffee";
+import type { Month } from "../types/coffee";
+import { apiCreateMonth, apiGetMonths } from "../api/coffeeApi";
 
 export const useCoffeeMonths = () => {
   const [months, setMonths] = useState<Month[]>([]);

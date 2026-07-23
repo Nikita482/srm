@@ -1,7 +1,7 @@
 // useCoffeeRows
 
-import { apiAddRow, apiSaveEditingRow } from "../../api/coffee";
-import type { CoffeeRow } from "../../types/coffee";
+import { apiAddRow, apiSaveEditingRow } from "../api/coffeeApi";
+import type { CoffeeRow } from "../types/coffee";
 
 export const useCoffeeRows = () => {
   const addRow = async (selectedMonth: string, newRow: CoffeeRow) => {

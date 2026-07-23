@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import { paths } from "./paths";
 import MainLayout from "../layout/MainLayout";
-import CalendarPage from "../../pages/Calendar";
-import CoffeePage from "../../pages/Coffee";
-import GoalsPage from "../../pages/Goals";
+import CalendarPage from "../../pages/calendar/Calendar";
+import CoffeePage from "../../pages/coffee/CoffeePage";
+import GoalsPage from "../../pages/goals/Goals";
 
 const router = createBrowserRouter([
   {

@@ -1,9 +1,9 @@
 import { Button, Card, DatePicker, Select, Space, Table, Tag } from "antd";
-import { useCoffeeMonths } from "../hooks/coffee/useCoffeeMonths";
-import { useCoffeeRows } from "../hooks/coffee/useCoffeeRows";
-import { useCoffeeForm } from "../hooks/coffee/useCoffeeForm";
+import { useCoffeeMonths } from "./hooks/useCoffeeMonths";
+import { useCoffeeRows } from "./hooks/useCoffeeRows";
+import { useCoffeeForm } from "./hooks/useCoffeeForm";
 import { useState } from "react";
-import { columns } from "../constants/coffeeColumns";
+import { columns } from "./constants/coffeeColumns";
 
 const CoffeePage = () => {
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
@@ -67,7 +67,6 @@ const CoffeePage = () => {
   // придумать как вписывать траты инкас закинули коменты
   // придумать че делать с пагинацией или вообще убрать ее
   // когда я закончу и выложу куда то проект смогу ли я скинуть ссылку на проект что бы кто то тоже имел доступ к таблицам? если да то как это исправить? авторизация?
-  // при открытии 2 и более строк недели наченаются проблемы
 
   // console.log(newRow);
   return (
