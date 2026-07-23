@@ -1,9 +1,13 @@
-import { DatePicker, Select, Table, Tag } from "antd";
+import { Button, Card, DatePicker, Select, Space, Table, Tag } from "antd";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import { apiGetMonths, apiCreateMonth, apiAddRow } from "../api/coffee";
+import {
+  apiGetMonths,
+  apiCreateMonth,
+  apiAddRow,
+  apiSaveEditingRow,
+} from "../api/coffee";
 import type { Month, CoffeeRow } from "../types/coffee";
-import { columns } from "../constants/coffeeColumns";
 
 const CoffeePage = () => {
   const [months, setMonths] = useState<Month[]>([]);
@@ -20,6 +24,25 @@ const CoffeePage = () => {
     accrued: 0,
     remaining: 0,
   });
+  const columns = [
+    {
+      title: "Число",
+      dataIndex: "date",
+      render: (dates: string[]) => dates.join(", "),
+    },
+    { title: "Зп", dataIndex: "salary" },
+    {
+      title: "Траты",
+      dataIndex: "expenses",
+    },
+
+    { title: "Инкас", dataIndex: "cashCollection" },
+    { title: "Заплатили", dataIndex: "paid" },
+    { title: "Комент", dataIndex: "comment" },
+    { title: "Начислено", dataIndex: "accrued" },
+    { title: "Осталось", dataIndex: "remaining" },
+  ];
+  const [editingRow, setEditingRow] = useState<CoffeeRow | null>(null);
 
   // получение всех месяцев
   useEffect(() => {
@@ -115,67 +138,125 @@ const CoffeePage = () => {
     });
   };
 
-  // console.log(newRow.date);
+  // добавление дней в неделю
+  const addEditDate = () => {};
+
+  // удаляю дни из недели
+  const removeEditDate = (day: string) => {
+    setEditingRow((prev) => {
+      if (!prev) return prev;
+
+      const newDays = prev.date.filter((item) => item !== day);
+
+      return {
+        ...prev,
+        date: newDays,
+        salary: newDays.length * 3000,
+      };
+    });
+  };
+
+  // отправляю обнавленную строку на бэк
+  const saveEditingRow = async (rowId: string) => {
+    if (!selectedMonth) return;
+
+    const data = await apiSaveEditingRow(selectedMonth, rowId, editingRow);
+
+    setMonths((prev) =>
+      prev.map((month) => (month._id === selectedMonth ? data : month)),
+    );
+  };
 
   // подумать че делать с фиксированой зп вдруг потом зп будет не фиксирования
   // придумать как вписывать траты инкас закинули коменты
   // придумать че делать с пагинацией или вообще убрать ее
+  // когда я закончу и выложу куда то проект смогу ли я скинуть ссылку на проект что бы кто то тоже имел доступ к таблицам? если да то как это исправить? авторизация?
+  // при открытии 2 и более строк недели наченаются проблемы
 
-  // че надо вынести:
-  // 2. columns
-  // 3. Типы
-  // 4. Функции handleDateChange и removeDate
+  // console.log(newRow);
 
   return (
     <>
-      <h1>CoffeePage - кофейня</h1>
-      <input
-        type="text"
-        placeholder="имя месяца:"
-        value={monthName}
-        onChange={(e) => setMonthName(e.target.value)}
-      />
-      <button onClick={() => createMonth()} disabled={!monthName.trim()}>
-        Добавить месяц
-      </button>
+      <div>
+        <h1>CoffeePage - кофейня</h1>
+        <input
+          type="text"
+          placeholder="имя месяца:"
+          value={monthName}
+          onChange={(e) => setMonthName(e.target.value)}
+        />
+        <button onClick={() => createMonth()} disabled={!monthName.trim()}>
+          Добавить месяц
+        </button>
 
-      <br />
+        <br />
 
-      <DatePicker
-        format="D"
-        size="middle"
-        allowClear={false}
-        value={selectedDate}
-        onChange={handleDateChange}
-      />
-      <button
-        onClick={() => addRow()}
-        disabled={newRow.date.length === 0 || months.length === 0}
-      >
-        Добавить Неделю
-      </button>
+        <DatePicker
+          format="D"
+          size="middle"
+          allowClear={false}
+          value={selectedDate}
+          onChange={handleDateChange}
+        />
+        <button
+          onClick={() => addRow()}
+          disabled={newRow.date.length === 0 || months.length === 0}
+        >
+          Добавить Неделю
+        </button>
 
-      {newRow.date.map((day) => (
-        <Tag key={day} closable onClose={() => removeDate(day)}>
-          {day}
-        </Tag>
-      ))}
+        {newRow.date.map((day) => (
+          <Tag key={day} closable onClose={() => removeDate(day)}>
+            {day}
+          </Tag>
+        ))}
 
-      <br />
+        <br />
 
-      <Select
-        style={{ width: 150 }}
-        value={selectedMonth}
-        options={monthOptions}
-        onChange={(value) => {
-          setSelectedMonth(value);
-          setNewRow((prev) => ({
-            ...prev,
-            date: [],
-          }));
+        <Select
+          style={{ width: 150 }}
+          value={selectedMonth}
+          options={monthOptions}
+          onChange={(value) => {
+            setSelectedMonth(value);
+            setNewRow((prev) => ({
+              ...prev,
+              date: [],
+            }));
+          }}
+        />
+      </div>
+
+      <Table
+        columns={columns}
+        dataSource={currentMonth?.data}
+        rowKey="_id"
+        expandable={{
+          onExpand: (expanded, record) => {
+            if (expanded) {
+              setEditingRow(record);
+            }
+            // console.log(record);
+          },
+          expandedRowRender: (record) => (
+            <Card>
+              <Space>
+                <p>Дни:</p>
+                {editingRow?.date.map((day) => (
+                  <Tag key={day} closable onClose={() => removeEditDate(day)}>
+                    {day}
+                  </Tag>
+                ))}
+                <Tag onClick={() => addEditDate()}>+</Tag>
+
+                <Button onClick={() => saveEditingRow(record._id)}>
+                  Сохранить
+                </Button>
+              </Space>
+            </Card>
+          ),
         }}
       />
-      <Table columns={columns} dataSource={currentMonth?.data} rowKey="_id" />
 
       <div style={{ height: "1000px" }}></div>
     </>

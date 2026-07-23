@@ -1,4 +1,5 @@
 export type CoffeeRow = {
+  _id?: string;
   date: string[];
   salary: number;
   expenses: number;
@@ -13,4 +14,13 @@ export type Month = {
   _id?: string;
   month: string;
   data: CoffeeRow[];
+};
+
+export type EditingRow = {
+  date: string[];
+  salary: number;
+  expenses: number;
+  cashCollection: number;
+  paid: number;
+  comment: string;
 };
