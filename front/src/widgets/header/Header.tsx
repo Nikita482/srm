@@ -14,6 +14,10 @@ const Header = () => {
       label: "Кофейня",
     },
     {
+      key: "/newCoffee",
+      label: "Кофейня 2.0",
+    },
+    {
       key: "/goals",
       label: "Цели",
     },
