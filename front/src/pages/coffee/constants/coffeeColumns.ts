@@ -13,6 +13,9 @@ export const columns = [
   { title: "Инкас", dataIndex: "cashCollection" },
   { title: "Заплатили", dataIndex: "paid" },
   { title: "Комент", dataIndex: "comment" },
-  { title: "Начислено", dataIndex: "accrued" },
+  {
+    title: "Начислено",
+    dataIndex: "accrued",
+  },
   { title: "Осталось", dataIndex: "remaining" },
 ];
