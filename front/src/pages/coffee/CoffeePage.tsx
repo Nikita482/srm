@@ -65,7 +65,7 @@ const CoffeePage = () => {
     updateMonth(data);
   };
 
-  // console.log(editingRow);
+  // console.log(selectedMonth);
   return (
     <>
       <div>

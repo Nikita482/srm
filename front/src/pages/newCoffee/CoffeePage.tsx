@@ -1,7 +1,14 @@
+// RTK и RTK Query
+// useSelector и useDispatch
+
+import CoffeeControls from "./components/CoffeeControls";
+import CoffeeTable from "./components/CoffeeTable";
+
 const NewCoffeePage = () => {
   return (
     <>
-      <h1>CoffeePage.tsx</h1>
+      <CoffeeControls />
+      <CoffeeTable />
     </>
   );
 };

@@ -32,8 +32,6 @@ export const addRow = async (req, res) => {
 };
 
 // patch обновляю неделю месяца
-// надо заменить выбраную строку на новую (editingRow) и отправить на фронт
-// запрос я уже написал, все. Теперь только состояние меняю на фронте
 export const updateRow = async (req, res) => {
   const { monthId, rowId } = req.params;
   const editingRow = req.body;
