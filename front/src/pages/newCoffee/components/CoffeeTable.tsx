@@ -1,5 +1,5 @@
 import { columns } from "../constants/coffeeColumns";
-import { useCoffeeMonth } from "../hooks/useCreateMonth";
+import { useCoffeeMonth } from "../hooks/useCoffeeMonths";
 import { Spin, Table } from "antd";
 
 const CoffeeTable = () => {
@@ -9,7 +9,11 @@ const CoffeeTable = () => {
   return (
     <>
       <h1>CoffeeTable</h1>
-      <Table columns={columns} dataSource={currentMonth?.data} rowKey="_id" />
+      <Table
+        columns={columns}
+        dataSource={[...(currentMonth?.data ?? [])].reverse()}
+        rowKey="_id"
+      />
     </>
   );
 };

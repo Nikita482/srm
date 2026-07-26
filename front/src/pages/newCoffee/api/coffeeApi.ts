@@ -23,10 +23,19 @@ export const coffeeApi = createApi({
       }),
       providesTags: ["Months"],
     }),
+    addRow: builder.mutation({
+      query: ({ selectedMonthId, newRow }) => ({
+        url: `/coffee/${selectedMonthId}/row`,
+        method: "POST",
+        body: newRow,
+      }),
+      invalidatesTags: ["Months"],
+    }),
   }),
 });
 
-export const { useCreateMonthMutation, useGetMonthsQuery } = coffeeApi;
+export const { useCreateMonthMutation, useGetMonthsQuery, useAddRowMutation } =
+  coffeeApi;
 
 // import axios from "axios";
 // import type { CoffeeRow, Month, EditingRow } from "../types/coffee";
