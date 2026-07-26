@@ -21,9 +21,6 @@ export const createMonths = async (req, res) => {
 
 // post добавить недели в месяц
 export const addRow = async (req, res) => {
-  console.log(req.params);
-  console.log(req.body);
-
   try {
     const month = await Coffee.findById(req.params.id);
     month.data.push(req.body);
