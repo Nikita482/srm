@@ -16,7 +16,17 @@ export const columns = [
 
   { title: "Инкас", dataIndex: "cashCollection" },
   { title: "Заплатили", dataIndex: "paid" },
-  { title: "Комент", dataIndex: "comment" },
+  {
+    title: "Комент",
+    dataIndex: "comment",
+    render: (comments) =>
+      comments.map((item) => (
+        <div key={item._id}>
+          {item.type} - {item.amount} - {item.text}
+        </div>
+      )),
+  },
+
   {
     title: "Начислено",
     dataIndex: "accrued",

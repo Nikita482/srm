@@ -10,7 +10,19 @@ const coffeeSchema = new mongoose.Schema({
       expenses: Number,
       cashCollection: Number,
       paid: Number,
-      comment: String,
+      comment: [
+        {
+          type: {
+            type: String,
+          },
+          amount: {
+            type: Number,
+          },
+          text: {
+            type: String,
+          },
+        },
+      ],
       accrued: Number,
       remaining: Number,
     },

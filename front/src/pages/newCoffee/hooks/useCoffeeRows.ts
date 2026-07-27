@@ -91,6 +91,13 @@ export const useCoffeeRows = () => {
           (editingRow?.[field] ?? 0) +
           Number(operationDraft.amount) * multiplier,
       }),
+      comment: [
+        {
+          type: "ччч", // expenses | cashCollection | paid
+          amount: 1000, // сумма операции
+          text: "комментарий пользователя", // комментарий пользователя
+        },
+      ],
     };
 
     setEditingRow(updatedRow);
