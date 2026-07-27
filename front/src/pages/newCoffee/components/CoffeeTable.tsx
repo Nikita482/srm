@@ -80,6 +80,7 @@ const CoffeeTable = () => {
                   <input
                     type="number"
                     placeholder="Сумма:"
+                    disabled={!operationDraft.type}
                     value={operationDraft.amount}
                     onChange={(e) =>
                       setOperationDraft((prev) => ({

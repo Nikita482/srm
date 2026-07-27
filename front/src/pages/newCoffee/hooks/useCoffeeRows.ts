@@ -4,22 +4,15 @@ import { useAddRowMutation, useUpdateRowMutation } from "../api/coffeeApi";
 import { useState } from "react";
 import type { Dayjs } from "dayjs";
 import type { CoffeeRow } from "../types/coffee";
+import { getOperationConfig } from "../utils/date";
+import { initialRow } from "../constants/initialRow";
 
 export const useCoffeeRows = () => {
   const [addRowRequest] = useAddRowMutation();
   const selectedMonthId = useSelector(
     (state: RootState) => state.coffee.selectedMonthId,
   );
-  const [newRow, setNewRow] = useState({
-    date: [],
-    salary: 0,
-    expenses: 0,
-    cashCollection: 0,
-    paid: 0,
-    comment: "",
-    accrued: 0,
-    remaining: 0,
-  });
+  const [newRow, setNewRow] = useState(initialRow);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [editingRow, setEditingRow] = useState<CoffeeRow | null>(null);
   const [updateRowRequest] = useUpdateRowMutation();
@@ -85,16 +78,20 @@ export const useCoffeeRows = () => {
 
   // обновляю всю неделю
   const saveEditingRow = async (rowId: string) => {
-    // редактирование ячеек "траты", "инкас" и "заплатили" ???
+    if (operationDraft.type && !operationDraft.amount) {
+      return;
+    }
+
+    const { field, multiplier } = getOperationConfig(operationDraft.type);
 
     const updatedRow = {
       ...editingRow,
-      ...(operationDraft.type && {
-        [operationDraft.type]: Number(operationDraft.amount),
+      ...(field && {
+        [field]:
+          (editingRow?.[field] ?? 0) +
+          Number(operationDraft.amount) * multiplier,
       }),
     };
-
-    console.log(operationDraft);
 
     setEditingRow(updatedRow);
 
@@ -102,6 +99,11 @@ export const useCoffeeRows = () => {
       selectedMonthId,
       rowId,
       editingRow: updatedRow,
+    });
+
+    setOperationDraft({
+      type: "",
+      amount: "",
     });
   };
 
