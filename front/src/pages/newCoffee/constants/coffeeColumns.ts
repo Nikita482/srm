@@ -4,7 +4,11 @@ export const columns = [
     dataIndex: "date",
     render: (dates: string[]) => dates.join(", "),
   },
-  { title: "Зп", dataIndex: "salary" },
+  {
+    title: "Зп",
+    dataIndex: "salary",
+    render: (_, record) => record.date.length * 3000,
+  },
   {
     title: "Траты",
     dataIndex: "expenses",

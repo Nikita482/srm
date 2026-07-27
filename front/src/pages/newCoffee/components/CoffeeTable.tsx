@@ -1,8 +1,18 @@
 import { useState } from "react";
 import { columns } from "../constants/coffeeColumns";
 import { useCoffeeMonth } from "../hooks/useCoffeeMonths";
-import { Button, Card, DatePicker, Space, Spin, Table, Tag } from "antd";
+import {
+  Button,
+  Card,
+  DatePicker,
+  Select,
+  Space,
+  Spin,
+  Table,
+  Tag,
+} from "antd";
 import { useCoffeeRows } from "../hooks/useCoffeeRows";
+import { operationOptions } from "../constants/operationOptions";
 
 const CoffeeTable = () => {
   const { months, currentMonth } = useCoffeeMonth();
@@ -12,10 +22,10 @@ const CoffeeTable = () => {
     removeEditDate,
     saveEditingRow,
     addEditDate,
+    setOperationDraft,
+    operationDraft,
   } = useCoffeeRows();
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
-
-  // console.log(editingRow);
 
   if (!months) return <Spin />;
   return (
@@ -30,6 +40,10 @@ const CoffeeTable = () => {
             if (expanded) {
               setExpandedRowKeys([record._id]);
               setEditingRow(record);
+              setOperationDraft({
+                type: "",
+                amount: "",
+              });
             } else {
               setExpandedRowKeys([]);
             }
@@ -49,19 +63,44 @@ const CoffeeTable = () => {
                     format="D"
                     allowClear={false}
                     onChange={(day) => addEditDate(day.date())}
-
-                    // value={selectedEditDate}
-                    // onChange={(date) => {
-                    //   if (!date) return;
-
-                    //   addEditDate(String(date.date()));
-                    //   setSelectedEditDate(null);
-                    // }}
                   />
 
-                  <Button onClick={() => saveEditingRow(record._id)}>
+                  {/* добавить вариант "ничего ни редактировать" и вариант "коменты" */}
+                  <Select
+                    style={{ width: "150px" }}
+                    value={operationDraft.type}
+                    options={operationOptions}
+                    onChange={(operation) =>
+                      setOperationDraft((prev) => ({
+                        ...prev,
+                        type: operation,
+                      }))
+                    }
+                  />
+                  <input
+                    type="number"
+                    placeholder="Сумма:"
+                    value={operationDraft.amount}
+                    onChange={(e) =>
+                      setOperationDraft((prev) => ({
+                        ...prev,
+                        amount: e.target.value,
+                      }))
+                    }
+                  />
+
+                  <Button
+                    onClick={() => saveEditingRow(record._id)}
+                    disabled={!!operationDraft.type && !operationDraft.amount}
+                  >
                     Сохранить
                   </Button>
+                  {/* 
+                  тип: инкас, траты, зп и коменты и колонку "коменты" переделать в колонку "опперации" 
+                  и на против каждой поставить кнопу для удаления операции 
+                  или
+                  сделать коменты автоматичекими и добавить возможность оставить свой комент
+                  */}
                 </Space>
               </Card>
             );
@@ -73,57 +112,3 @@ const CoffeeTable = () => {
 };
 
 export default CoffeeTable;
-
-{
-  /*
-      expandedRowRender: (record) => {}, // что показать при раскрытии
-      expandedRowKeys: [],               // какие строки открыты
-      onExpand: (expanded, record) => {}, // открыли/закрыли строку
-      rowExpandable: (record) => true,    // можно ли раскрыть строку
-
-      <Table
-        columns={columns}
-        dataSource={currentMonth?.data}
-        rowKey="_id"
-        expandable={{
-          expandedRowKeys: expandedRowKeys,
-          onExpand: (expanded, record) => {
-            if (expanded) {
-              setExpandedRowKeys([record._id]);
-              setEditingRow(record); 
-            } else {
-              setExpandedRowKeys([]);
-            }
-          },
-          expandedRowRender: (record) => (
-            <Card>
-              <Space>
-                <p>Дни:</p>
-                {editingRow?.date.map((day) => (
-                  <Tag key={day} closable onClose={() => removeEditDate(day)}>
-                    {day}
-                  </Tag>
-                ))}
-                <DatePicker
-                  placeholder="+ день"
-                  format="D"
-                  allowClear={false}
-                  value={selectedEditDate}
-                  onChange={(date) => {
-                    if (!date) return;
-
-                    addEditDate(String(date.date()));
-                    setSelectedEditDate(null);
-                  }}
-                />
-
-                <Button onClick={() => onSaveEditingRow(record._id)}>
-                  Сохранить
-                </Button>
-              </Space>
-            </Card>
-          ),
-        }}
-      />  
-*/
-}

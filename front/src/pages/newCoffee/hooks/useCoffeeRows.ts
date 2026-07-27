@@ -23,6 +23,10 @@ export const useCoffeeRows = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [editingRow, setEditingRow] = useState<CoffeeRow | null>(null);
   const [updateRowRequest] = useUpdateRowMutation();
+  const [operationDraft, setOperationDraft] = useState({
+    type: "",
+    amount: "",
+  });
 
   // добавление новой строки в месяц
   const addRow = () => {
@@ -81,11 +85,25 @@ export const useCoffeeRows = () => {
 
   // обновляю всю неделю
   const saveEditingRow = async (rowId: string) => {
-    console.log(rowId);
-    await updateRowRequest({ selectedMonthId, rowId, editingRow });
-  };
+    // редактирование ячеек "траты", "инкас" и "заплатили" ???
 
-  console.log(editingRow);
+    const updatedRow = {
+      ...editingRow,
+      ...(operationDraft.type && {
+        [operationDraft.type]: Number(operationDraft.amount),
+      }),
+    };
+
+    console.log(operationDraft);
+
+    setEditingRow(updatedRow);
+
+    await updateRowRequest({
+      selectedMonthId,
+      rowId,
+      editingRow: updatedRow,
+    });
+  };
 
   return {
     addRow,
@@ -97,7 +115,9 @@ export const useCoffeeRows = () => {
     editingRow,
     setEditingRow,
     removeEditDate,
-    saveEditingRow,
     addEditDate,
+    setOperationDraft,
+    operationDraft,
+    saveEditingRow,
   };
 };
