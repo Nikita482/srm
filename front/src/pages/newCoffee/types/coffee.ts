@@ -1,7 +1,8 @@
 export type Comment = {
-  type: string;
+  operation: string;
   amount: number;
   text: string;
+  date: string;
 };
 
 export type CoffeeRow = {

@@ -1,3 +1,5 @@
+import { getOperationText } from "../utils/textComent";
+
 export const columns = [
   {
     title: "Число",
@@ -20,11 +22,18 @@ export const columns = [
     title: "Комент",
     dataIndex: "comment",
     render: (comments) =>
-      comments.map((item) => (
-        <div key={item._id}>
-          {item.type} - {item.amount} - {item.text}
-        </div>
-      )),
+      comments.map((comment) => {
+        const amount = comment.amount.toLocaleString("ru-RU");
+        const operation = getOperationText(comment.operation);
+        const text = comment.text;
+        const date = comment.date;
+
+        return (
+          <p key={comment._id}>
+            {`${amount} ₽ - ${operation}${text ? ` ${text},` : ","} ${date}`}
+          </p>
+        );
+      }),
   },
 
   {

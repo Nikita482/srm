@@ -19,6 +19,8 @@ export const useCoffeeRows = () => {
   const [operationDraft, setOperationDraft] = useState({
     type: "",
     amount: "",
+    text: "",
+    date: null as Dayjs | null,
   });
 
   // добавление новой строки в месяц
@@ -76,29 +78,58 @@ export const useCoffeeRows = () => {
     });
   };
 
-  // обновляю всю неделю
-  const saveEditingRow = async (rowId: string) => {
-    if (operationDraft.type && !operationDraft.amount) {
-      return;
-    }
+  // создание коментария
+  const createComment = () => {
+    if (!operationDraft.type) return null;
 
+    return {
+      operation: operationDraft.type,
+      amount: Number(operationDraft.amount),
+      text: operationDraft.text,
+      date: operationDraft.date?.format("D MMMM"),
+    };
+  };
+
+  // отвечает за изменение суммы в строке (paid, expenses, cashCollection)
+  const updateOperationField = () => {
     const { field, multiplier } = getOperationConfig(operationDraft.type);
+    if (!field) return {};
 
-    const updatedRow = {
+    return {
+      [field]:
+        (editingRow?.[field] ?? 0) + Number(operationDraft.amount) * multiplier,
+    };
+  };
+
+  // собрает полностью обновлённую строку для замены editingRow на эту строку
+  const buildUpdatedRow = () => {
+    const comment = createComment();
+
+    return {
       ...editingRow,
-      ...(field && {
-        [field]:
-          (editingRow?.[field] ?? 0) +
-          Number(operationDraft.amount) * multiplier,
-      }),
+      ...updateOperationField(),
       comment: [
-        {
-          type: "ччч", // expenses | cashCollection | paid
-          amount: 1000, // сумма операции
-          text: "комментарий пользователя", // комментарий пользователя
-        },
+        ...(editingRow?.comment ?? []),
+        ...(operationDraft.type ? [comment] : []),
       ],
     };
+  };
+
+  // очистить форму коментария после сохранения
+  const resetOperationDraft = () => {
+    setOperationDraft({
+      type: "",
+      amount: "",
+      text: "",
+      date: null,
+    });
+  };
+
+  // обновляю всю неделю
+  const saveEditingRow = async (rowId: string) => {
+    if (operationDraft.type && !operationDraft.amount) return;
+
+    const updatedRow = buildUpdatedRow();
 
     setEditingRow(updatedRow);
 
@@ -108,10 +139,7 @@ export const useCoffeeRows = () => {
       editingRow: updatedRow,
     });
 
-    setOperationDraft({
-      type: "",
-      amount: "",
-    });
+    resetOperationDraft();
   };
 
   return {

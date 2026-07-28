@@ -12,15 +12,10 @@ const coffeeSchema = new mongoose.Schema({
       paid: Number,
       comment: [
         {
-          type: {
-            type: String,
-          },
-          amount: {
-            type: Number,
-          },
-          text: {
-            type: String,
-          },
+          operation: String,
+          amount: Number,
+          text: String,
+          date: String,
         },
       ],
       accrued: Number,

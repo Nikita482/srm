@@ -43,6 +43,8 @@ const CoffeeTable = () => {
               setOperationDraft({
                 type: "",
                 amount: "",
+                text: "",
+                date: null,
               });
             } else {
               setExpandedRowKeys([]);
@@ -64,7 +66,7 @@ const CoffeeTable = () => {
                     allowClear={false}
                     onChange={(day) => addEditDate(day.date())}
                   />
-
+                  <p>Операция:</p>
                   {/* добавить вариант "ничего ни редактировать" и вариант "коменты" */}
                   <Select
                     style={{ width: "150px" }}
@@ -90,9 +92,38 @@ const CoffeeTable = () => {
                     }
                   />
 
+                  <input
+                    type="string"
+                    placeholder="Комент:"
+                    disabled={!operationDraft.type}
+                    value={operationDraft.text}
+                    onChange={(e) =>
+                      setOperationDraft((prev) => ({
+                        ...prev,
+                        text: e.target.value,
+                      }))
+                    }
+                  />
+
+                  <DatePicker
+                    placeholder="Дата операции:"
+                    format="D MMMM"
+                    disabled={!operationDraft.type}
+                    allowClear={false}
+                    value={operationDraft.date}
+                    onChange={(day) =>
+                      setOperationDraft((prev) => ({
+                        ...prev,
+                        date: day,
+                      }))
+                    }
+                  />
                   <Button
                     onClick={() => saveEditingRow(record._id)}
-                    disabled={!!operationDraft.type && !operationDraft.amount}
+                    disabled={
+                      !!operationDraft.type &&
+                      (!operationDraft.amount || !operationDraft.date)
+                    }
                   >
                     Сохранить
                   </Button>
