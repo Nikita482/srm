@@ -32,7 +32,7 @@ const CoffeeTable = () => {
     <>
       <Table
         columns={columns}
-        dataSource={[...(currentMonth?.data ?? [])].reverse()}
+        dataSource={[...(currentMonth?.data ?? [])]}
         rowKey="_id"
         expandable={{
           expandedRowKeys,
@@ -121,8 +121,6 @@ const CoffeeTable = () => {
                   <Button
                     onClick={() => saveEditingRow(record._id)}
                     disabled={
-                      // !!operationDraft.type &&
-                      // (!operationDraft.amount || !operationDraft.date)
                       operationDraft.type !== "comment" &&
                       operationDraft.type &&
                       (!operationDraft.amount || !operationDraft.date)
@@ -130,12 +128,6 @@ const CoffeeTable = () => {
                   >
                     Сохранить
                   </Button>
-                  {/* 
-                  тип: инкас, траты, зп и коменты и колонку "коменты" переделать в колонку "опперации" 
-                  и на против каждой поставить кнопу для удаления операции 
-                  или
-                  сделать коменты автоматичекими и добавить возможность оставить свой комент
-                  */}
                 </Space>
               </Card>
             );

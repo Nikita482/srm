@@ -10,6 +10,3 @@ export const operationOptions = [
   { value: "comment", label: "Только комент" },
   { value: "", label: "Ничего" },
 ];
-
-//   { title: "Комент", dataIndex: "comment" },
-//   { title: "Ничего", dataIndex: "???" },
