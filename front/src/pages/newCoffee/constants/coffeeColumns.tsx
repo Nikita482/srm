@@ -23,19 +23,21 @@ export const columns = [
     dataIndex: "comment",
     render: (comments) =>
       comments.map((comment) => {
-        const amount = comment.amount.toLocaleString("ru-RU");
+        const amount = comment.amount;
         const operation = getOperationText(comment.operation);
         const text = comment.text;
-        const date = comment.date;
+        const date = comment.date || "";
 
+        const operationText = operation === "comment" ? "комент -" : operation;
+        const amountText =
+          amount === 0 ? "" : `${amount.toLocaleString("ru-RU")} ₽ -`;
         return (
           <p key={comment._id}>
-            {`${amount} ₽ - ${operation}${text ? ` ${text},` : ","} ${date}`}
+            {`${amountText} ${operationText} ${text} ${date}`}
           </p>
         );
       }),
   },
-
   {
     title: "Начислено",
     dataIndex: "accrued",

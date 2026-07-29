@@ -121,7 +121,10 @@ const CoffeeTable = () => {
                   <Button
                     onClick={() => saveEditingRow(record._id)}
                     disabled={
-                      !!operationDraft.type &&
+                      // !!operationDraft.type &&
+                      // (!operationDraft.amount || !operationDraft.date)
+                      operationDraft.type !== "comment" &&
+                      operationDraft.type &&
                       (!operationDraft.amount || !operationDraft.date)
                     }
                   >

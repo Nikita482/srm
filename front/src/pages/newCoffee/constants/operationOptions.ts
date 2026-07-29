@@ -7,6 +7,7 @@ export const operationOptions = [
   { value: "removeCashCollection", label: "- Инкас" },
   { value: "removeExpenses", label: "- Траты" },
 
+  { value: "comment", label: "Только комент" },
   { value: "", label: "Ничего" },
 ];
 

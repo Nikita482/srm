@@ -78,16 +78,14 @@ export const useCoffeeRows = () => {
     });
   };
 
-  // создание коментария
-  const createComment = () => {
-    if (!operationDraft.type) return null;
-
-    return {
-      operation: operationDraft.type,
-      amount: Number(operationDraft.amount),
-      text: operationDraft.text,
-      date: operationDraft.date?.format("D MMMM"),
-    };
+  // очистить форму коментария после сохранения
+  const resetOperationDraft = () => {
+    setOperationDraft({
+      type: "",
+      amount: "",
+      text: "",
+      date: null,
+    });
   };
 
   // отвечает за изменение суммы в строке (paid, expenses, cashCollection)
@@ -98,6 +96,18 @@ export const useCoffeeRows = () => {
     return {
       [field]:
         (editingRow?.[field] ?? 0) + Number(operationDraft.amount) * multiplier,
+    };
+  };
+
+  // создание коментария
+  const createComment = () => {
+    if (!operationDraft.type) return null;
+
+    return {
+      operation: operationDraft.type,
+      amount: Number(operationDraft.amount),
+      text: operationDraft.text,
+      date: operationDraft.date?.format("D MMMM"),
     };
   };
 
@@ -115,19 +125,11 @@ export const useCoffeeRows = () => {
     };
   };
 
-  // очистить форму коментария после сохранения
-  const resetOperationDraft = () => {
-    setOperationDraft({
-      type: "",
-      amount: "",
-      text: "",
-      date: null,
-    });
-  };
-
   // обновляю всю неделю
   const saveEditingRow = async (rowId: string) => {
-    if (operationDraft.type && !operationDraft.amount) return;
+    if (operationDraft.type && operationDraft.type !== "comment") {
+      if (!operationDraft.amount || !operationDraft.date) return;
+    }
 
     const updatedRow = buildUpdatedRow();
 
