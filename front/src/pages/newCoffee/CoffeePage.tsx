@@ -2,7 +2,7 @@
 // useSelector и useDispatch
 
 import CoffeeControls from "./components/CoffeeControls";
-import CoffeeTable from "./components/CoffeeTable";
+import CoffeeTable from "./components/coffeeTable/CoffeeTable";
 
 const NewCoffeePage = () => {
   return (
