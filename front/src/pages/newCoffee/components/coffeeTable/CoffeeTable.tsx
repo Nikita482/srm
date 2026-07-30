@@ -28,6 +28,7 @@ const CoffeeTable = () => {
     addEditDate,
     setOperationDraft,
     operationDraft,
+    removeComment,
   } = useCoffeeRows();
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
@@ -35,7 +36,7 @@ const CoffeeTable = () => {
   return (
     <>
       <Table
-        columns={columns}
+        columns={columns({ removeComment })}
         dataSource={[...(currentMonth?.data ?? [])]}
         rowKey="_id"
         expandable={{

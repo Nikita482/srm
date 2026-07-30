@@ -111,7 +111,12 @@ export const useCoffeeRows = () => {
     };
   };
 
-  // собрает полностью обновлённую строку для замены editingRow на эту строку
+  // удаление коментария
+  const removeComment = (commentId: string) => {
+    console.log(commentId);
+  };
+
+  // собрает полностью обновлённую неделю с коментами для замены editingRow на эту строку
   const buildUpdatedRow = () => {
     const comment = createComment();
 
@@ -144,6 +149,8 @@ export const useCoffeeRows = () => {
     resetOperationDraft();
   };
 
+  console.log(operationDraft);
+
   return {
     addRow,
     newRow,
@@ -158,5 +165,6 @@ export const useCoffeeRows = () => {
     setOperationDraft,
     operationDraft,
     saveEditingRow,
+    removeComment,
   };
 };
