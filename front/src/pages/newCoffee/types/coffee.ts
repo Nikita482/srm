@@ -1,4 +1,5 @@
 export type Comment = {
+  _id?: string;
   operation: string;
   amount: number;
   text: string;
