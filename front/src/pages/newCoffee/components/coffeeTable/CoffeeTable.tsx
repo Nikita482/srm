@@ -16,6 +16,7 @@ import { useCoffeeRows } from "../../hooks/useCoffeeRows";
 import { operationOptions } from "../../constants/operationOptions";
 import OperationFields from "./OperationFields";
 import { formatComment } from "../../utils/formatComment";
+import { useState } from "react";
 
 const CoffeeTable = () => {
   const { months, currentMonth } = useCoffeeMonth();
@@ -33,6 +34,8 @@ const CoffeeTable = () => {
     selectedCommentId,
   } = useCoffeeRows();
 
+  const [openRowId, setOpenRowId] = useState<string | null>(null);
+
   const columns = [
     {
       title: "Число",
@@ -46,6 +49,16 @@ const CoffeeTable = () => {
 
             <Popover
               trigger="click"
+              open={openRowId === record._id}
+              onOpenChange={(open) => {
+                if (open) {
+                  setOpenRowId(record._id);
+                  setEditingRow(record);
+                } else {
+                  setOpenRowId(null);
+                  setEditingRow(null);
+                }
+              }}
               content={
                 <Flex gap={10} vertical>
                   <Flex gap={10} justify="space-between">
@@ -56,7 +69,12 @@ const CoffeeTable = () => {
                       onChange={(day) => addEditDate(day.date())}
                     />
 
-                    <Button onClick={() => saveEditingRow(record._id)}>
+                    <Button
+                      onClick={() => {
+                        saveEditingRow(record._id);
+                        setOpenRowId(null);
+                      }}
+                    >
                       Сохранить
                     </Button>
                   </Flex>
@@ -75,9 +93,7 @@ const CoffeeTable = () => {
                 </Flex>
               }
             >
-              <Button size="small" onClick={() => setEditingRow(record)}>
-                ✏️
-              </Button>
+              <Button size="small">✏️</Button>
             </Popover>
           </Space>
         );
