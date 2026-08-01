@@ -7,6 +7,7 @@ import {
   DatePicker,
   Divider,
   Flex,
+  Popover,
   Select,
   Space,
   Spin,
@@ -147,6 +148,10 @@ const CoffeeTable = () => {
           },
         }}
       />
+
+      <Popover trigger="click" content={<DatePicker format="D" />}>
+        <Button size="small">+</Button>
+      </Popover>
     </>
   );
 };
