@@ -1,22 +1,11 @@
 import { useCoffeeMonth } from "../../hooks/useCoffeeMonths";
-import {
-  Button,
-  Card,
-  DatePicker,
-  Flex,
-  Popover,
-  Select,
-  Space,
-  Spin,
-  Table,
-  Tag,
-  Typography,
-} from "antd";
+import { Card, Flex, Select, Space, Spin, Table, Typography } from "antd";
 import { useCoffeeRows } from "../../hooks/useCoffeeRows";
 import { operationOptions } from "../../constants/operationOptions";
 import OperationFields from "./OperationFields";
 import { formatComment } from "../../utils/formatComment";
-import { useState } from "react";
+import EditableNumber from "./EditableNumber";
+import EditableDates from "./EditableDates";
 
 const CoffeeTable = () => {
   const { months, currentMonth } = useCoffeeMonth();
@@ -34,83 +23,74 @@ const CoffeeTable = () => {
     selectedCommentId,
   } = useCoffeeRows();
 
-  const [openRowId, setOpenRowId] = useState<string | null>(null);
+  // поработать над визуалом ибо колонки сейчас плавуют и не одинаковые (уменьшить размер полей)
+  // добавботать коменты
+  // доработать итоги (Начислено и Осталось)
+  // убрать из ui лишний визуал и логику
+  // убрать из кастомных хуков все лишнюю логику
 
   const columns = [
     {
       title: "Число",
       dataIndex: "date",
-      render: (dates: string[], record) => {
-        return (
-          <Space>
-            {dates.map((day) => (
-              <Tag key={day}>{day}</Tag>
-            ))}
-
-            <Popover
-              trigger="click"
-              open={openRowId === record._id}
-              onOpenChange={(open) => {
-                if (open) {
-                  setOpenRowId(record._id);
-                  setEditingRow(record);
-                } else {
-                  setOpenRowId(null);
-                  setEditingRow(null);
-                }
-              }}
-              content={
-                <Flex gap={10} vertical>
-                  <Flex gap={10} justify="space-between">
-                    <DatePicker
-                      size="small"
-                      placeholder="+ день"
-                      format="D"
-                      onChange={(day) => addEditDate(day.date())}
-                    />
-
-                    <Button
-                      onClick={() => {
-                        saveEditingRow(record._id);
-                        setOpenRowId(null);
-                      }}
-                    >
-                      Сохранить
-                    </Button>
-                  </Flex>
-
-                  <Space>
-                    {editingRow?.date.map((day) => (
-                      <Tag
-                        key={day}
-                        closable
-                        onClose={() => removeEditDate(day)}
-                      >
-                        {day}
-                      </Tag>
-                    ))}
-                  </Space>
-                </Flex>
-              }
-            >
-              <Button size="small">✏️</Button>
-            </Popover>
-          </Space>
-        );
-      },
+      render: (dates, record) => (
+        <EditableDates
+          dates={dates}
+          record={record}
+          editingRow={editingRow}
+          setEditingRow={setEditingRow}
+          addEditDate={addEditDate}
+          removeEditDate={removeEditDate}
+          saveEditingRow={saveEditingRow}
+        />
+      ),
     },
     {
       title: "Зп",
       dataIndex: "salary",
-      render: (_, record) => record.date.length * 3000,
+      render: (_, record) => (
+        <Typography.Text>{record.date.length * 3000} ₽</Typography.Text>
+      ),
     },
     {
       title: "Траты",
       dataIndex: "expenses",
+      render: (_, record) => (
+        <EditableNumber
+          record={record}
+          field="expenses"
+          editingRow={editingRow}
+          setEditingRow={setEditingRow}
+          saveEditingRow={saveEditingRow}
+        />
+      ),
     },
-
-    { title: "Инкас", dataIndex: "cashCollection" },
-    { title: "Заплатили", dataIndex: "paid" },
+    {
+      title: "Инкас",
+      dataIndex: "cashCollection",
+      render: (_, record) => (
+        <EditableNumber
+          record={record}
+          field="cashCollection"
+          editingRow={editingRow}
+          setEditingRow={setEditingRow}
+          saveEditingRow={saveEditingRow}
+        />
+      ),
+    },
+    {
+      title: "Заплатили",
+      dataIndex: "paid",
+      render: (_, record) => (
+        <EditableNumber
+          record={record}
+          field="paid"
+          editingRow={editingRow}
+          setEditingRow={setEditingRow}
+          saveEditingRow={saveEditingRow}
+        />
+      ),
+    },
     {
       title: "Комент",
       dataIndex: "comment",
