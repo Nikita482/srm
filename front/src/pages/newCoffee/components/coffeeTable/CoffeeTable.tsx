@@ -1,11 +1,8 @@
-import { useState } from "react";
-import { columns } from "../../constants/coffeeColumns";
 import { useCoffeeMonth } from "../../hooks/useCoffeeMonths";
 import {
   Button,
   Card,
   DatePicker,
-  Divider,
   Flex,
   Popover,
   Select,
@@ -18,6 +15,7 @@ import {
 import { useCoffeeRows } from "../../hooks/useCoffeeRows";
 import { operationOptions } from "../../constants/operationOptions";
 import OperationFields from "./OperationFields";
+import { formatComment } from "../../utils/formatComment";
 
 const CoffeeTable = () => {
   const { months, currentMonth } = useCoffeeMonth();
@@ -34,34 +32,36 @@ const CoffeeTable = () => {
     setSelectedCommentId,
     selectedCommentId,
   } = useCoffeeRows();
-  const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
-  console.log(commentOptions);
+  const columns = [
+    {
+      title: "Число",
+      dataIndex: "date",
+      render: (dates: string[], record) => {
+        return (
+          <Space>
+            {dates.map((day) => (
+              <Tag key={day}>{day}</Tag>
+            ))}
 
-  if (!months) return <Spin />;
-  return (
-    <>
-      <Table
-        columns={columns}
-        dataSource={[...(currentMonth?.data ?? [])]}
-        rowKey="_id"
-        expandable={{
-          expandedRowKeys,
-          onExpand: (expanded, record) => {
-            if (expanded) {
-              setExpandedRowKeys([record._id]);
-              setEditingRow(record);
-              resetOperationDraft();
-            } else {
-              setExpandedRowKeys([]);
-            }
-          },
-          expandedRowRender: (record) => {
-            return (
-              <Flex align="center" justify="space-between">
-                <Card>
+            <Popover
+              trigger="click"
+              content={
+                <Flex gap={10} vertical>
+                  <Flex gap={10} justify="space-between">
+                    <DatePicker
+                      size="small"
+                      placeholder="+ день"
+                      format="D"
+                      onChange={(day) => addEditDate(day.date())}
+                    />
+
+                    <Button onClick={() => saveEditingRow(record._id)}>
+                      Сохранить
+                    </Button>
+                  </Flex>
+
                   <Space>
-                    <Typography.Text strong>Дни работы:</Typography.Text>
                     {editingRow?.date.map((day) => (
                       <Tag
                         key={day}
@@ -71,24 +71,63 @@ const CoffeeTable = () => {
                         {day}
                       </Tag>
                     ))}
-
-                    <DatePicker
-                      size="small"
-                      placeholder="+ день"
-                      format="D"
-                      allowClear={false}
-                      onChange={(day) => addEditDate(day.date())}
-                    />
                   </Space>
-                </Card>
+                </Flex>
+              }
+            >
+              <Button size="small" onClick={() => setEditingRow(record)}>
+                ✏️
+              </Button>
+            </Popover>
+          </Space>
+        );
+      },
+    },
+    {
+      title: "Зп",
+      dataIndex: "salary",
+      render: (_, record) => record.date.length * 3000,
+    },
+    {
+      title: "Траты",
+      dataIndex: "expenses",
+    },
 
-                <Divider
-                  vertical
-                  style={{
-                    height: "auto",
-                  }}
-                />
+    { title: "Инкас", dataIndex: "cashCollection" },
+    { title: "Заплатили", dataIndex: "paid" },
+    {
+      title: "Комент",
+      dataIndex: "comment",
+      render: (comments) =>
+        comments.map((comment) => (
+          <div key={comment._id} style={{ display: "flex" }}>
+            <p>{formatComment(comment)}</p>
+          </div>
+        )),
+    },
+    {
+      title: "Начислено",
+      dataIndex: "accrued",
+    },
+    { title: "Осталось", dataIndex: "remaining" },
+  ];
 
+  if (!months) return <Spin />;
+  return (
+    <>
+      <Table
+        columns={columns}
+        dataSource={[...(currentMonth?.data ?? [])]}
+        rowKey="_id"
+        expandable={{
+          onExpand: (expanded) => {
+            if (expanded) {
+              resetOperationDraft();
+            }
+          },
+          expandedRowRender: () => {
+            return (
+              <Flex align="center" justify="space-between">
                 <Card style={{ flex: 1 }}>
                   <Space>
                     <Typography.Text strong>Операция:</Typography.Text>
@@ -123,35 +162,13 @@ const CoffeeTable = () => {
                     />
                   </Space>
                 </Card>
-
-                <Divider
-                  vertical
-                  style={{
-                    height: "auto",
-                  }}
-                />
-
-                <Card>
-                  <Button
-                    onClick={() => saveEditingRow(record._id)}
-                    disabled={
-                      operationDraft.type !== "comment" &&
-                      operationDraft.type &&
-                      (!operationDraft.amount || !operationDraft.date)
-                    }
-                  >
-                    Сохранить
-                  </Button>
-                </Card>
               </Flex>
             );
           },
         }}
       />
 
-      <Popover trigger="click" content={<DatePicker format="D" />}>
-        <Button size="small">+</Button>
-      </Popover>
+      <div style={{ height: "1000px" }}></div>
     </>
   );
 };

@@ -70,16 +70,12 @@ export const useCoffeeRows = () => {
 
   // добовляю дни в тестовую неделю
   const addEditDate = (day: number) => {
-    setEditingRow((prev) => {
-      if (!prev) return prev;
-
-      const newDay = String(day);
-
-      return {
-        ...prev,
-        date: prev.date.includes(newDay) ? prev.date : [...prev.date, newDay],
-      };
-    });
+    setEditingRow((prev) => ({
+      ...prev,
+      date: prev.date.includes(String(day))
+        ? prev.date
+        : [...prev.date, String(day)],
+    }));
   };
 
   // очистить форму коментария после сохранения
