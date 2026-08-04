@@ -1,5 +1,6 @@
 import { Button, DatePicker, Flex, Popover, Space, Tag } from "antd";
 import { useState } from "react";
+import { EditOutlined } from "@ant-design/icons";
 
 const EditableDates = ({
   dates,
@@ -63,7 +64,9 @@ const EditableDates = ({
           </Flex>
         }
       >
-        <Button size="small">✏️</Button>
+        <Button size="small">
+          <EditOutlined />
+        </Button>
       </Popover>
     </Space>
   );

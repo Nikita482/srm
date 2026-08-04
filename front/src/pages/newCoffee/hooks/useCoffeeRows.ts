@@ -16,15 +16,13 @@ export const useCoffeeRows = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [editingRow, setEditingRow] = useState<CoffeeRow | null>(null);
   const [updateRowRequest] = useUpdateRowMutation();
-  const [selectedCommentId, setSelectedCommentId] = useState<string | null>(
-    null,
-  );
   const [operationDraft, setOperationDraft] = useState({
     type: "",
     amount: 0,
     text: "",
     date: null as string | null,
   });
+  const [hasChanges, setHasChanges] = useState(false);
 
   // добавление новой строки в месяц
   const addRow = () => {
@@ -88,7 +86,7 @@ export const useCoffeeRows = () => {
     if (!operationDraft.type) return null;
 
     return {
-      // _id: crypto.randomUUID(),
+      _id: crypto.randomUUID(),
       operation: operationDraft.type,
       amount: Number(operationDraft.amount),
       text: operationDraft.text,
@@ -96,19 +94,26 @@ export const useCoffeeRows = () => {
     };
   };
 
+  // удаление коментария
+  const removeComment = (commentId) => {
+    setEditingRow((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        comment: prev.comment.filter((com) => com._id !== commentId),
+      };
+    });
+    setHasChanges(true);
+  };
+
   // собрает всю обновлённую неделю
   const buildUpdatedRow = () => {
     const comment = createComment();
 
-    // удаляет комент
-    // const updatedComments =
-    //   editingRow?.comment.filter(
-    //     (comment) => comment._id !== selectedCommentId,
-    //   ) ?? [];
-
     return {
       ...editingRow,
-      comment: [...(operationDraft.type ? [comment] : [])],
+      comment: [...editingRow.comment, ...(comment ? [comment] : [])],
     };
   };
 
@@ -124,7 +129,13 @@ export const useCoffeeRows = () => {
       editingRow: updatedRow,
     });
 
-    setSelectedCommentId(null);
+    setOperationDraft({
+      type: "",
+      amount: 0,
+      text: "",
+      date: null,
+    });
+    setHasChanges(false);
   };
 
   return {
@@ -140,9 +151,9 @@ export const useCoffeeRows = () => {
     addEditDate,
     saveEditingRow,
     commentOptions,
-    setSelectedCommentId,
-    selectedCommentId,
     operationDraft,
     setOperationDraft,
+    removeComment,
+    hasChanges,
   };
 };
