@@ -37,7 +37,10 @@ const EditableDates = ({
                 size="small"
                 placeholder="+ день"
                 format="D"
-                onChange={(day) => addEditDate(day.date())}
+                onChange={(day) => {
+                  if (!day) return;
+                  addEditDate(day.date());
+                }}
               />
 
               <Button

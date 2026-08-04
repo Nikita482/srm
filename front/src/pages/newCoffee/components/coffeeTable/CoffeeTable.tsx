@@ -1,11 +1,25 @@
 import { useCoffeeMonth } from "../../hooks/useCoffeeMonths";
-import { Card, Flex, Select, Space, Spin, Table, Typography } from "antd";
+import {
+  Button,
+  Card,
+  DatePicker,
+  Flex,
+  Input,
+  InputNumber,
+  Popover,
+  Select,
+  Space,
+  Spin,
+  Table,
+  Tag,
+  Typography,
+} from "antd";
 import { useCoffeeRows } from "../../hooks/useCoffeeRows";
 import { operationOptions } from "../../constants/operationOptions";
-import OperationFields from "./OperationFields";
 import { formatComment } from "../../utils/formatComment";
 import EditableNumber from "./EditableNumber";
 import EditableDates from "./EditableDates";
+import { useState } from "react";
 
 const CoffeeTable = () => {
   const { months, currentMonth } = useCoffeeMonth();
@@ -15,12 +29,11 @@ const CoffeeTable = () => {
     removeEditDate,
     saveEditingRow,
     addEditDate,
-    setOperationDraft,
-    operationDraft,
     commentOptions,
-    resetOperationDraft,
     setSelectedCommentId,
     selectedCommentId,
+    operationDraft,
+    setOperationDraft,
   } = useCoffeeRows();
 
   // поработать над визуалом ибо колонки сейчас плавуют и не одинаковые (уменьшить размер полей)
@@ -28,6 +41,8 @@ const CoffeeTable = () => {
   // доработать итоги (Начислено и Осталось)
   // убрать из ui лишний визуал и логику
   // убрать из кастомных хуков все лишнюю логику
+
+  const [openRowId, setOpenRowId] = useState<string | null>(null);
 
   const columns = [
     {
@@ -94,12 +109,104 @@ const CoffeeTable = () => {
     {
       title: "Комент",
       dataIndex: "comment",
-      render: (comments) =>
-        comments.map((comment) => (
-          <div key={comment._id} style={{ display: "flex" }}>
-            <p>{formatComment(comment)}</p>
-          </div>
-        )),
+      render: (comments, record) => {
+        return (
+          <Flex vertical gap={4} align="flex-start">
+            {comments.map((comment) => (
+              <Tag key={comment._id}>{formatComment(comment)}</Tag>
+            ))}
+
+            <Popover
+              trigger="click"
+              open={openRowId === record._id}
+              onOpenChange={(open) => {
+                if (open) {
+                  setOpenRowId(record._id);
+                  setEditingRow(record);
+                } else {
+                  setEditingRow(null);
+                  setOpenRowId(null);
+                }
+              }}
+              content={
+                <Flex vertical gap={4}>
+                  <Flex gap={4}>
+                    <Select
+                      style={{ width: "130px" }}
+                      size="small"
+                      value={operationDraft.type}
+                      options={operationOptions}
+                      onChange={(operation) =>
+                        setOperationDraft((prev) => ({
+                          ...prev,
+                          type: operation,
+                        }))
+                      }
+                    />
+
+                    <DatePicker
+                      size="small"
+                      placeholder="День:"
+                      format="D MMMM"
+                      onChange={(day) =>
+                        setOperationDraft((prev) => ({
+                          ...prev,
+                          date: day ? day.format("D MMMM") : null,
+                        }))
+                      }
+                    />
+                  </Flex>
+
+                  <Flex gap={4}>
+                    <Input
+                      placeholder="Комент:"
+                      size="small"
+                      value={operationDraft.text}
+                      onChange={(e) =>
+                        setOperationDraft((prev) => ({
+                          ...prev,
+                          text: e.target.value,
+                        }))
+                      }
+                    />
+
+                    <InputNumber
+                      placeholder="Сумма:"
+                      formatter={(value) =>
+                        `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽"
+                      }
+                      value={operationDraft.amount}
+                      onChange={(num) =>
+                        setOperationDraft((prev) => ({
+                          ...prev,
+                          amount: num ?? 0,
+                        }))
+                      }
+                      size="small"
+                      style={{ width: "80px", flexShrink: 0 }}
+                    />
+                  </Flex>
+                  <Button
+                    disabled={
+                      !operationDraft.type ||
+                      !operationDraft.date ||
+                      !operationDraft.text ||
+                      !operationDraft.amount
+                    }
+                    onClick={() => {
+                      saveEditingRow(record._id);
+                    }}
+                  >
+                    Сохранить
+                  </Button>
+                </Flex>
+              }
+            >
+              <Button size="small">✏️</Button>
+            </Popover>
+          </Flex>
+        );
+      },
     },
     {
       title: "Начислено",
@@ -116,11 +223,7 @@ const CoffeeTable = () => {
         dataSource={[...(currentMonth?.data ?? [])]}
         rowKey="_id"
         expandable={{
-          onExpand: (expanded) => {
-            if (expanded) {
-              resetOperationDraft();
-            }
-          },
+          onExpand: () => {},
           expandedRowRender: () => {
             return (
               <Flex align="center" justify="space-between">
@@ -141,10 +244,10 @@ const CoffeeTable = () => {
                       }
                     />
 
-                    <OperationFields
+                    {/* <OperationFields
                       operationDraft={operationDraft}
                       setOperationDraft={setOperationDraft}
-                    />
+                    /> */}
 
                     <Select
                       size="small"

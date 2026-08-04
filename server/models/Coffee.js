@@ -12,7 +12,7 @@ const coffeeSchema = new mongoose.Schema({
       paid: Number,
       comment: [
         {
-          _id: String,
+          // _id: String,
           operation: String,
           amount: Number,
           text: String,

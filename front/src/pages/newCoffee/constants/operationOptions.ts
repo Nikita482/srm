@@ -1,12 +1,6 @@
 export const operationOptions = [
-  { value: "paid", label: "+ Заплатили" },
-  { value: "cashCollection", label: "+ Инкас" },
-  { value: "expenses", label: "+ Траты" },
-
-  { value: "removePaid", label: "- Заплатили" },
-  { value: "removeCashCollection", label: "- Инкас" },
-  { value: "removeExpenses", label: "- Траты" },
-
-  { value: "comment", label: "Только комент" },
+  { value: "paid", label: "Заплатили" },
+  { value: "cashCollection", label: "Инкас" },
+  { value: "expenses", label: "Траты" },
   { value: "", label: "Ничего" },
 ];

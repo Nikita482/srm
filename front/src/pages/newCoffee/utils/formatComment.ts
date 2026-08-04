@@ -1,8 +1,6 @@
-import { getOperationText } from "./textComent";
-
 export const formatComment = (comment) => {
   const amount = comment.amount;
-  const operation = getOperationText(comment.operation);
+  const operation = comment.operation;
   const text = comment.text;
   const date = comment.date || "";
 
