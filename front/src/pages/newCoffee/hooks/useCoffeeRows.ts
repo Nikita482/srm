@@ -5,7 +5,6 @@ import { useState } from "react";
 import type { Dayjs } from "dayjs";
 import type { CoffeeRow } from "../types/coffee";
 import { initialRow } from "../constants/initialRow";
-import { formatComment } from "../utils/formatComment";
 
 export const useCoffeeRows = () => {
   const [addRowRequest] = useAddRowMutation();
@@ -74,12 +73,6 @@ export const useCoffeeRows = () => {
         : [...prev.date, String(day)],
     }));
   };
-
-  // опции в селекте для удаления коментария
-  const commentOptions = editingRow?.comment.map((comment) => ({
-    value: comment._id,
-    label: formatComment(comment),
-  }));
 
   // создание коментария
   const createComment = () => {
@@ -150,7 +143,6 @@ export const useCoffeeRows = () => {
     removeEditDate,
     addEditDate,
     saveEditingRow,
-    commentOptions,
     operationDraft,
     setOperationDraft,
     removeComment,

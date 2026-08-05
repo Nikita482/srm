@@ -1,27 +1,9 @@
+import { Spin, Table, Typography } from "antd";
 import { useCoffeeMonth } from "../../hooks/useCoffeeMonths";
-import {
-  Button,
-  Card,
-  DatePicker,
-  Flex,
-  Input,
-  InputNumber,
-  Popover,
-  Select,
-  Space,
-  Spin,
-  Table,
-  Tag,
-  Typography,
-} from "antd";
 import { useCoffeeRows } from "../../hooks/useCoffeeRows";
-import { operationOptions } from "../../constants/operationOptions";
-import { formatComment } from "../../utils/formatComment";
 import EditableNumber from "./EditableNumber";
 import EditableDates from "./EditableDates";
-import { useState } from "react";
-import dayjs from "dayjs";
-import { MessageOutlined, EditOutlined } from "@ant-design/icons";
+import EditableComment from "./EditableComment";
 
 const CoffeeTable = () => {
   const { months, currentMonth } = useCoffeeMonth();
@@ -31,7 +13,6 @@ const CoffeeTable = () => {
     removeEditDate,
     saveEditingRow,
     addEditDate,
-    commentOptions,
     operationDraft,
     setOperationDraft,
     removeComment,
@@ -43,8 +24,6 @@ const CoffeeTable = () => {
   // доработать итоги (Начислено и Осталось)
   // убрать из ui лишний визуал и логику
   // убрать из кастомных хуков все лишнюю логику
-
-  const [openRowId, setOpenRowId] = useState<string | null>(null);
 
   const columns = [
     {
@@ -113,137 +92,17 @@ const CoffeeTable = () => {
       dataIndex: "comment",
       render: (comments, record) => {
         return (
-          <Flex vertical gap={4} align="flex-start">
-            <Flex gap={10}>
-              <Typography.Text>
-                <MessageOutlined /> {comments.length}
-              </Typography.Text>
-
-              <Popover
-                trigger="click"
-                open={openRowId === record._id}
-                onOpenChange={(open) => {
-                  if (open) {
-                    setOpenRowId(record._id);
-                    setEditingRow(record);
-                  } else {
-                    setEditingRow(null);
-                    setOpenRowId(null);
-                  }
-                }}
-                content={
-                  <Flex vertical gap={4}>
-                    <Flex gap={4}>
-                      <Select
-                        style={{ width: "130px" }}
-                        size="small"
-                        value={operationDraft.type}
-                        options={operationOptions}
-                        onChange={(operation) =>
-                          setOperationDraft((prev) => ({
-                            ...prev,
-                            type: operation,
-                          }))
-                        }
-                      />
-
-                      <DatePicker
-                        size="small"
-                        placeholder="День:"
-                        format="D MMMM"
-                        value={
-                          operationDraft.date
-                            ? dayjs(operationDraft.date, "D MMMM")
-                            : null
-                        }
-                        onChange={(day) =>
-                          setOperationDraft((prev) => ({
-                            ...prev,
-                            date: day ? day.format("D MMMM") : null,
-                          }))
-                        }
-                      />
-                    </Flex>
-
-                    <Flex gap={4}>
-                      <Input
-                        placeholder="Комент:"
-                        size="small"
-                        maxLength={80}
-                        value={operationDraft.text}
-                        onChange={(e) =>
-                          setOperationDraft((prev) => ({
-                            ...prev,
-                            text: e.target.value,
-                          }))
-                        }
-                      />
-
-                      <InputNumber
-                        placeholder="Сумма:"
-                        formatter={(value) =>
-                          `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") +
-                          " ₽"
-                        }
-                        value={operationDraft.amount}
-                        onChange={(num) =>
-                          setOperationDraft((prev) => ({
-                            ...prev,
-                            amount: num ?? 0,
-                          }))
-                        }
-                        size="small"
-                        style={{ width: "70px", flexShrink: 0 }}
-                      />
-                    </Flex>
-
-                    <Button
-                      disabled={
-                        // !operationDraft.type ||
-                        // !operationDraft.date ||
-                        // !operationDraft.text ||
-                        // !operationDraft.amount
-                        !hasChanges &&
-                        (!operationDraft.type ||
-                          !operationDraft.date ||
-                          !operationDraft.text ||
-                          !operationDraft.amount)
-                      }
-                      onClick={() => {
-                        saveEditingRow(record._id);
-                      }}
-                    >
-                      Сохранить
-                    </Button>
-
-                    <Flex vertical gap={4} align="flex-start">
-                      {editingRow?.comment.map((comment) => (
-                        <Tag
-                          key={comment?._id}
-                          style={{
-                            maxWidth: "250px",
-                            whiteSpace: "normal",
-                            wordBreak: "break-word",
-                          }}
-                          closable
-                          onClose={(e) => {
-                            e.preventDefault();
-                            removeComment(comment._id);
-                          }}
-                        >
-                          {formatComment(comment)}
-                        </Tag>
-                      ))}
-                    </Flex>
-                  </Flex>
-                }
-              >
-                <Button size="small">
-                  <EditOutlined />
-                </Button>
-              </Popover>
-            </Flex>
-          </Flex>
+          <EditableComment
+            comments={comments}
+            record={record}
+            setEditingRow={setEditingRow}
+            operationDraft={operationDraft}
+            setOperationDraft={setOperationDraft}
+            hasChanges={hasChanges}
+            saveEditingRow={saveEditingRow}
+            editingRow={editingRow}
+            removeComment={removeComment}
+          />
         );
       },
     },
@@ -261,49 +120,6 @@ const CoffeeTable = () => {
         columns={columns}
         dataSource={[...(currentMonth?.data ?? [])]}
         rowKey="_id"
-        expandable={{
-          onExpand: () => {},
-          expandedRowRender: () => {
-            return (
-              <Flex align="center" justify="space-between">
-                <Card style={{ flex: 1 }}>
-                  <Space>
-                    <Typography.Text strong>Операция:</Typography.Text>
-
-                    <Select
-                      style={{ width: "150px" }}
-                      size="small"
-                      value={operationDraft.type}
-                      options={operationOptions}
-                      onChange={(operation) =>
-                        setOperationDraft((prev) => ({
-                          ...prev,
-                          type: operation,
-                        }))
-                      }
-                    />
-
-                    {/* <OperationFields
-                      operationDraft={operationDraft}
-                      setOperationDraft={setOperationDraft}
-                    /> */}
-
-                    <Select
-                      size="small"
-                      placeholder="Выбрать комент:"
-                      style={{ width: 300 }}
-                      // value={selectedCommentId}
-                      options={commentOptions}
-                      // onChange={(comId) => {
-                      // setSelectedCommentId(comId);
-                      // }}
-                    />
-                  </Space>
-                </Card>
-              </Flex>
-            );
-          },
-        }}
       />
 
       <div style={{ height: "1000px" }}></div>
