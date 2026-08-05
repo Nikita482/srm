@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import coffeeReducer from "./slices/coffeeSlice";
-import { coffeeApi } from "../../pages/newCoffee/api/coffeeApi";
+import { coffeeApi } from "../../pages/coffee/api/coffeeApi";
 
 export const store = configureStore({
   reducer: {

@@ -1,3 +1,11 @@
+export type Comment = {
+  _id?: string;
+  operation: string;
+  amount: number;
+  text: string;
+  date: string;
+};
+
 export type CoffeeRow = {
   _id?: string;
   date: string[];
@@ -5,7 +13,7 @@ export type CoffeeRow = {
   expenses: number;
   cashCollection: number;
   paid: number;
-  comment: string;
+  comment: Comment[];
   accrued: number;
   remaining: number;
 };
@@ -22,5 +30,5 @@ export type EditingRow = {
   expenses: number;
   cashCollection: number;
   paid: number;
-  comment: string;
+  comment: Comment[];
 };

@@ -20,10 +20,8 @@ const CoffeeTable = () => {
   } = useCoffeeRows();
 
   // поработать над визуалом ибо колонки сейчас плавуют и не одинаковые (уменьшить размер полей)
-  // добавботать коменты
   // доработать итоги (Начислено и Осталось)
-  // убрать из ui лишний визуал и логику
-  // убрать из кастомных хуков все лишнюю логику
+  // убрать из кастомных хуков все лишнюю логику и перенести часть в редакс
 
   const columns = [
     {
@@ -51,6 +49,7 @@ const CoffeeTable = () => {
     {
       title: "Траты",
       dataIndex: "expenses",
+      // width: 150,
       render: (_, record) => (
         <EditableNumber
           record={record}
@@ -64,6 +63,7 @@ const CoffeeTable = () => {
     {
       title: "Инкас",
       dataIndex: "cashCollection",
+      // width: 150,
       render: (_, record) => (
         <EditableNumber
           record={record}
@@ -77,6 +77,7 @@ const CoffeeTable = () => {
     {
       title: "Заплатили",
       dataIndex: "paid",
+      // width: 150,
       render: (_, record) => (
         <EditableNumber
           record={record}
@@ -90,6 +91,7 @@ const CoffeeTable = () => {
     {
       title: "Комент",
       dataIndex: "comment",
+      // width: 150,
       render: (comments, record) => {
         return (
           <EditableComment
@@ -120,6 +122,8 @@ const CoffeeTable = () => {
         columns={columns}
         dataSource={[...(currentMonth?.data ?? [])]}
         rowKey="_id"
+        tableLayout="auto"
+        // scroll={{ x: 1000 }}
       />
 
       <div style={{ height: "1000px" }}></div>
