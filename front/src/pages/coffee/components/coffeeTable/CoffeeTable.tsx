@@ -7,6 +7,7 @@ import EditableComment from "./EditableComment";
 
 const CoffeeTable = () => {
   const { months, currentMonth } = useCoffeeMonth();
+
   const {
     editingRow,
     setEditingRow,
@@ -37,6 +38,8 @@ const CoffeeTable = () => {
           removeEditDate={removeEditDate}
           saveEditingRow={saveEditingRow}
         />
+        // Добавить кнопку удаления в Popover самой недели (рядом с Tag дат).
+        // При открытии недели через кнопку "+ неделя" показывать список существующих недель с удалением.
       ),
     },
     {
@@ -123,7 +126,7 @@ const CoffeeTable = () => {
         dataSource={[...(currentMonth?.data ?? [])]}
         rowKey="_id"
         tableLayout="auto"
-        // scroll={{ x: 1000 }}
+        scroll={{ x: 1000 }}
       />
 
       <div style={{ height: "1000px" }}></div>

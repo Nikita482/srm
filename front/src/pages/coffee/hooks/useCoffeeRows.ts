@@ -1,6 +1,11 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../app/store/store";
-import { useAddRowMutation, useUpdateRowMutation } from "../api/coffeeApi";
+import {
+  useAddRowMutation,
+  useGetMonthsQuery,
+  useUpdateRowMutation,
+  useDeleteRowMutation,
+} from "../api/coffeeApi";
 import { useState } from "react";
 import type { Dayjs } from "dayjs";
 import type { CoffeeRow } from "../types/coffee";
@@ -8,13 +13,15 @@ import { initialRow } from "../constants/initialRow";
 
 export const useCoffeeRows = () => {
   const [addRowRequest] = useAddRowMutation();
+  const { data: months } = useGetMonthsQuery();
+  const [updateRowRequest] = useUpdateRowMutation();
+  const [deleteRowRequest] = useDeleteRowMutation();
   const selectedMonthId = useSelector(
     (state: RootState) => state.coffee.selectedMonthId,
   );
   const [newRow, setNewRow] = useState(initialRow);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [editingRow, setEditingRow] = useState<CoffeeRow | null>(null);
-  const [updateRowRequest] = useUpdateRowMutation();
   const [operationDraft, setOperationDraft] = useState({
     type: "",
     amount: 0,
@@ -131,6 +138,18 @@ export const useCoffeeRows = () => {
     setHasChanges(false);
   };
 
+  // поиск недель для удаления
+  const getWeeksForDelete = months?.find(
+    (week) => week?._id === selectedMonthId,
+  );
+
+  // deleteRow useDeleteRowMutation
+  // deleteRowRequest
+  const deleteRow = async (rowId: string) => {
+    await deleteRowRequest({ selectedMonthId, rowId });
+    // .unwrap();
+  };
+
   return {
     addRow,
     newRow,
@@ -147,5 +166,7 @@ export const useCoffeeRows = () => {
     setOperationDraft,
     removeComment,
     hasChanges,
+    getWeeksForDelete,
+    deleteRow,
   };
 };

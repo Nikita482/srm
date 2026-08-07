@@ -15,10 +15,6 @@ const EditableDates = ({
 
   return (
     <Space>
-      {dates.map((day) => (
-        <Tag key={day}>{day}</Tag>
-      ))}
-
       <Popover
         trigger="click"
         open={openRowId === record._id}
@@ -68,6 +64,10 @@ const EditableDates = ({
           <EditOutlined />
         </Button>
       </Popover>
+
+      {dates.map((day) => (
+        <Tag key={day}>{day}</Tag>
+      ))}
     </Space>
   );
 };

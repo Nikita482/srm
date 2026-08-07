@@ -59,3 +59,27 @@ export const updateRow = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// delete удаляю неделю
+export const deleteRow = async (req, res) => {
+  try {
+    const { monthId, rowId } = req.params;
+
+    const updatedMonth = await Coffee.findByIdAndUpdate(
+      monthId,
+      {
+        $pull: {
+          data: { _id: rowId },
+        },
+      },
+      { returnDocument: "after" },
+    );
+
+    if (!updatedMonth)
+      return res.status(404).json({ message: "Месяц не найден" });
+
+    res.json(updatedMonth);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

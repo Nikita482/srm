@@ -39,6 +39,13 @@ export const coffeeApi = createApi({
       }),
       invalidatesTags: ["Months"],
     }),
+    deleteRow: builder.mutation({
+      query: ({ selectedMonthId, rowId }) => ({
+        url: `/coffee/${selectedMonthId}/row/${rowId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Months"],
+    }),
   }),
 });
 
@@ -47,4 +54,5 @@ export const {
   useGetMonthsQuery,
   useAddRowMutation,
   useUpdateRowMutation,
+  useDeleteRowMutation,
 } = coffeeApi;
