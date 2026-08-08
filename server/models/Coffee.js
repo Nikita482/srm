@@ -19,8 +19,6 @@ const coffeeSchema = new mongoose.Schema({
           date: String,
         },
       ],
-      accrued: Number,
-      remaining: Number,
     },
   ],
 });

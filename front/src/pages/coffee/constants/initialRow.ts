@@ -5,6 +5,4 @@ export const initialRow = {
   cashCollection: 0,
   paid: 0,
   comment: [],
-  accrued: 0,
-  remaining: 0,
 };

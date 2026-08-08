@@ -14,8 +14,6 @@ export type CoffeeRow = {
   cashCollection: number;
   paid: number;
   comment: Comment[];
-  accrued: number;
-  remaining: number;
 };
 
 export type Month = {

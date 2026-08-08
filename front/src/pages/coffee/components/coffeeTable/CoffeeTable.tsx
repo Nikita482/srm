@@ -1,4 +1,4 @@
-import { Spin, Table, Typography } from "antd";
+import { Spin, Table } from "antd";
 import { useCoffeeMonth } from "../../hooks/useCoffeeMonths";
 import { useCoffeeRows } from "../../hooks/useCoffeeRows";
 import EditableNumber from "./EditableNumber";
@@ -46,7 +46,13 @@ const CoffeeTable = () => {
       title: "Зп",
       dataIndex: "salary",
       render: (_, record) => (
-        <Typography.Text>{record.date.length * 3000} ₽</Typography.Text>
+        <EditableNumber
+          record={record}
+          field="salary"
+          editingRow={editingRow}
+          setEditingRow={setEditingRow}
+          saveEditingRow={saveEditingRow}
+        />
       ),
     },
     {
@@ -113,9 +119,14 @@ const CoffeeTable = () => {
     },
     {
       title: "Начислено",
-      dataIndex: "accrued",
+      render: (_, record) =>
+        `${(record.cashCollection + record.paid).toLocaleString("ru-RU")} ₽`,
     },
-    { title: "Осталось", dataIndex: "remaining" },
+    {
+      title: "Осталось",
+      render: (_, record) =>
+        `${(record.salary + record.expenses - (record.cashCollection + record.paid)).toLocaleString("ru-RU")} ₽`,
+    },
   ];
 
   if (!months) return <Spin />;
