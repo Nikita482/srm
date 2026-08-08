@@ -83,3 +83,14 @@ export const deleteRow = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// delete удаляю месяц
+export const deleteMonth = async (req, res) => {
+  try {
+    const { monthId } = req.params;
+    await Coffee.findByIdAndDelete(monthId);
+    res.status(200).json({ message: "Месяц удалён" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

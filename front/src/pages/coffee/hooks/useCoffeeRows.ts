@@ -143,11 +143,8 @@ export const useCoffeeRows = () => {
     (week) => week?._id === selectedMonthId,
   );
 
-  // deleteRow useDeleteRowMutation
-  // deleteRowRequest
   const deleteRow = async (rowId: string) => {
     await deleteRowRequest({ selectedMonthId, rowId });
-    // .unwrap();
   };
 
   return {

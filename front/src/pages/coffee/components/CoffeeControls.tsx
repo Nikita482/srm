@@ -1,6 +1,7 @@
 import {
   Button,
   DatePicker,
+  Divider,
   Flex,
   Input,
   Popconfirm,
@@ -15,10 +16,19 @@ import { useCoffeeRows } from "../hooks/useCoffeeRows";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setSelectedMonthId } from "../../../app/store/slices/coffeeSlice";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, CalendarOutlined } from "@ant-design/icons";
 
 const CoffeeControls = () => {
-  const { createMonth, monthOptions, selectedMonthId } = useCoffeeMonth();
+  const {
+    createMonth,
+    monthOptions,
+    selectedMonthId,
+    setMonthSearch,
+    monthSearch,
+    filteredMonths,
+    deleteMonth,
+  } = useCoffeeMonth();
+
   const {
     addRow,
     newRow,
@@ -29,8 +39,16 @@ const CoffeeControls = () => {
     getWeeksForDelete,
     deleteRow,
   } = useCoffeeRows();
-  const [monthName, setMonthName] = useState("");
+
   const dispatch = useDispatch();
+
+  const [monthName, setMonthName] = useState("");
+
+  // Добавить кнопку 🗑 рядом с названием месяца в Select
+  // Добавить удаление месяца внутрь Popover рядом с созданием нового месяца.
+  // // Select + иконка 🗑 !!!!!!! — выбрать месяц из списка и рядом нажать удалить.
+  // // Поиск + список — поле поиска сверху, ниже найденный месяц с 🗑.
+  // Показать перед удалением краткую статистику — например, «4 недели, 12 записей».
 
   return (
     <>
@@ -45,8 +63,9 @@ const CoffeeControls = () => {
       <Popover
         trigger="click"
         content={
-          <Flex vertical align="flex-start" gap={10}>
+          <Flex vertical align="flex-start" gap={5}>
             <Typography.Text strong>Добавить неделю</Typography.Text>
+
             <Flex justify="space-between" style={{ width: "100%" }} gap={10}>
               <DatePicker
                 style={{ flex: 1 }}
@@ -66,6 +85,7 @@ const CoffeeControls = () => {
                 Сохранить
               </Button>
             </Flex>
+
             <Space>
               {newRow.date.map((day) => (
                 <Tag key={day} closable onClose={() => removeDate(day)}>
@@ -74,28 +94,63 @@ const CoffeeControls = () => {
               ))}
             </Space>
 
-            <Typography.Text strong>Управление неделями</Typography.Text>
-            {getWeeksForDelete?.data.map((week) => (
-              <Flex
-                key={week._id}
-                align="center"
-                justify="space-between"
-                style={{ width: "100%" }}
-              >
-                <Typography.Text>
-                  📅 Неделя: {week.date.join(", ")}
-                </Typography.Text>
+            <Typography.Text strong>Удалить неделю</Typography.Text>
 
-                <Popconfirm
-                  title="Удалить неделю?"
-                  okText="Удалить"
-                  okButtonProps={{ danger: true }}
-                  onConfirm={() => deleteRow(week._id)}
-                >
-                  <Button danger size="small" icon={<DeleteOutlined />} />
-                </Popconfirm>
-              </Flex>
-            ))}
+            <Flex
+              vertical
+              style={{
+                maxHeight: 175,
+                overflowY: "auto",
+                width: "100%",
+              }}
+              gap={5}
+            >
+              {getWeeksForDelete?.data.map((week, index) => (
+                <Flex key={week._id} vertical>
+                  {index > 0 && <Divider style={{ margin: "5px 0" }} />}
+
+                  <Flex align="center" justify="space-between">
+                    <Typography.Text>
+                      <CalendarOutlined /> Неделя: {week.date.join(", ")}
+                    </Typography.Text>
+
+                    <Popconfirm
+                      title="Удалить неделю?"
+                      okText="Удалить"
+                      okButtonProps={{ danger: true }}
+                      onConfirm={() => deleteRow(week._id)}
+                    >
+                      <Button danger size="small" icon={<DeleteOutlined />} />
+                    </Popconfirm>
+                  </Flex>
+                </Flex>
+              ))}
+
+              {/*
+              <Flex key={month._id} vertical>
+                  {index > 0 && <Divider style={{ margin: "5px 0" }} />}
+
+                  <Flex
+                    align="center"
+                    justify="space-between"
+                    style={{ width: "100%" }}
+                  >
+                    <Typography.Text>
+                      <CalendarOutlined /> месяц: {month.month}
+                    </Typography.Text>
+
+                    <Popconfirm
+                      title="Удалить месяц?"
+                      okText="Удалить"
+                      okButtonProps={{ danger: true }}
+                      // onConfirm={() => deleteRow(week._id)}
+                    >
+                      <Button danger size="small" icon={<DeleteOutlined />} />
+                    </Popconfirm>
+                  </Flex>
+                </Flex>
+              */}
+            </Flex>
           </Flex>
         }
       >
@@ -130,7 +185,49 @@ const CoffeeControls = () => {
               </Button>
             </Flex>
 
-            <Typography.Text strong>Управление месяцами</Typography.Text>
+            <Typography.Text strong>Удалить месяц</Typography.Text>
+
+            <Input
+              size="small"
+              placeholder="Поиск месяца:"
+              allowClear
+              value={monthSearch}
+              onChange={(e) => setMonthSearch(e.target.value)}
+            />
+
+            <Flex
+              vertical
+              style={{
+                maxHeight: 175,
+                overflowY: "auto",
+              }}
+              gap={5}
+            >
+              {filteredMonths?.map((month, index) => (
+                <Flex key={month._id} vertical>
+                  {index > 0 && <Divider style={{ margin: "5px 0" }} />}
+
+                  <Flex
+                    align="center"
+                    justify="space-between"
+                    style={{ width: "100%" }}
+                  >
+                    <Typography.Text>
+                      <CalendarOutlined /> месяц: {month.month}
+                    </Typography.Text>
+
+                    <Popconfirm
+                      title="Удалить месяц?"
+                      okText="Удалить"
+                      okButtonProps={{ danger: true }}
+                      onConfirm={() => deleteMonth(month._id)}
+                    >
+                      <Button danger size="small" icon={<DeleteOutlined />} />
+                    </Popconfirm>
+                  </Flex>
+                </Flex>
+              ))}
+            </Flex>
           </Flex>
         }
       >

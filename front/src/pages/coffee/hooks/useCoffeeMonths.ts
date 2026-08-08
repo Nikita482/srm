@@ -1,16 +1,23 @@
 // создание месяца
 import { useDispatch, useSelector } from "react-redux";
-import { useCreateMonthMutation, useGetMonthsQuery } from "../api/coffeeApi";
+import {
+  useCreateMonthMutation,
+  useGetMonthsQuery,
+  useDeleteMonthMutation,
+} from "../api/coffeeApi";
 import type { RootState } from "../../../app/store/store";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { setSelectedMonthId } from "../../../app/store/slices/coffeeSlice";
 
 export const useCoffeeMonth = () => {
-  const { data: months } = useGetMonthsQuery();
+  const { data: months, refetch } = useGetMonthsQuery();
   const [createMonthRequest] = useCreateMonthMutation();
+  const [deleteMonthRequest] = useDeleteMonthMutation();
   const selectedMonthId = useSelector(
     (state: RootState) => state.coffee.selectedMonthId,
   );
+  const [monthSearch, setMonthSearch] = useState("");
+
   const dispatch = useDispatch();
 
   // создать пустой месяц
@@ -42,5 +49,42 @@ export const useCoffeeMonth = () => {
     }
   }, [months, selectedMonthId, dispatch]);
 
-  return { createMonth, months, monthOptions, selectedMonthId, currentMonth };
+  // поиск месяца для удаления
+  const filteredMonths = useMemo(() => {
+    if (!monthSearch.trim()) return [];
+
+    return (
+      months?.filter((item) =>
+        item.month.toLowerCase().includes(monthSearch.toLowerCase()),
+      ) ?? []
+    );
+  }, [months, monthSearch]);
+
+  // удалние месяца
+  const deleteMonth = async (monthId: string) => {
+    await deleteMonthRequest(monthId).unwrap();
+
+    if (selectedMonthId === monthId) {
+      const { data: updatedMonths } = await refetch();
+      dispatch(
+        setSelectedMonthId(
+          updatedMonths?.[updatedMonths.length - 1]?._id ?? null,
+        ),
+      );
+    }
+
+    setMonthSearch("");
+  };
+
+  return {
+    createMonth,
+    months,
+    monthOptions,
+    selectedMonthId,
+    currentMonth,
+    setMonthSearch,
+    monthSearch,
+    filteredMonths,
+    deleteMonth,
+  };
 };
