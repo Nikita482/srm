@@ -8,6 +8,7 @@ import {
 import type { RootState } from "../../../app/store/store";
 import { useEffect, useMemo, useState } from "react";
 import { setSelectedMonthId } from "../../../app/store/slices/coffeeSlice";
+import { message } from "antd";
 
 export const useCoffeeMonth = () => {
   const { data: months, refetch } = useGetMonthsQuery();
@@ -22,10 +23,21 @@ export const useCoffeeMonth = () => {
 
   // создать пустой месяц
   const createMonth = async (monthName: string) => {
+    const exists = months?.some(
+      (item) =>
+        item.month.trim().toLowerCase() === monthName.trim().toLowerCase(),
+    );
+
+    if (exists) {
+      message.warning("Месяц с таким названием уже существует");
+      return;
+    }
+
     const newMonth = await createMonthRequest({
       month: monthName,
       data: [],
     }).unwrap();
+
     dispatch(setSelectedMonthId(newMonth._id));
   };
 
