@@ -1,15 +1,21 @@
 import {
   Button,
   DatePicker,
+  Divider,
   Flex,
   Input,
   InputNumber,
+  Popconfirm,
   Popover,
   Select,
-  Tag,
+  Space,
   Typography,
 } from "antd";
-import { MessageOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  MessageOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { formatComment } from "../../utils/formatComment";
 import { operationOptions } from "../../constants/operationOptions";
 import dayjs from "dayjs";
@@ -48,10 +54,11 @@ const EditableComment = ({
             }
           }}
           content={
-            <Flex vertical gap={4}>
-              <Flex gap={4}>
+            <Flex vertical gap={5}>
+              <Typography.Text strong>Добавить комент</Typography.Text>
+              <Flex gap={5}>
                 <Select
-                  style={{ width: "130px" }}
+                  style={{ flex: 1 }}
                   size="small"
                   value={operationDraft.type}
                   options={operationOptions}
@@ -66,6 +73,7 @@ const EditableComment = ({
                 <DatePicker
                   size="small"
                   placeholder="День:"
+                  style={{ flex: 1 }}
                   format="D MMMM"
                   value={
                     operationDraft.date
@@ -81,11 +89,13 @@ const EditableComment = ({
                 />
               </Flex>
 
-              <Flex gap={4}>
+              <Flex gap={5}>
                 <Input
                   placeholder="Комент:"
                   size="small"
                   maxLength={80}
+                  showCount
+                  // style={{ minWidth: 0, flex: 1 }}
                   value={operationDraft.text}
                   onChange={(e) =>
                     setOperationDraft((prev) => ({
@@ -108,7 +118,7 @@ const EditableComment = ({
                     }))
                   }
                   size="small"
-                  style={{ width: "70px", flexShrink: 0 }}
+                  style={{ width: "80px", flexShrink: 0 }}
                 />
               </Flex>
 
@@ -127,24 +137,58 @@ const EditableComment = ({
                 Сохранить
               </Button>
 
-              <Flex vertical gap={4} align="flex-start">
-                {editingRow?.comment.map((comment) => (
-                  <Tag
-                    key={comment?._id}
-                    style={{
-                      maxWidth: "250px",
-                      whiteSpace: "normal",
-                      wordBreak: "break-word",
-                    }}
-                    closable
-                    onClose={(e) => {
-                      e.preventDefault();
-                      removeComment(comment._id);
-                    }}
-                  >
-                    {formatComment(comment)}
-                  </Tag>
-                ))}
+              <Typography.Text strong>Удалить комент</Typography.Text>
+
+              <Flex
+                vertical
+                gap={5}
+                style={{
+                  maxHeight: 175,
+                  overflowY: "auto",
+                }}
+              >
+                {editingRow?.comment.map((comment, index) => {
+                  const formatted = formatComment(comment);
+
+                  return (
+                    <Flex key={comment?._id} vertical>
+                      {index > 0 && <Divider style={{ margin: "5px 0" }} />}
+
+                      <Flex align="center" justify="space-between">
+                        <Typography.Text>
+                          {formatted.amount} {formatted.operation}{" "}
+                          {formatted.date}
+                        </Typography.Text>
+
+                        <Space>
+                          <Popover content={formatted.text} trigger="click">
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<MessageOutlined />}
+                            />
+                          </Popover>
+
+                          <Popconfirm
+                            title="Удалить комент?"
+                            okText="Удалить"
+                            okButtonProps={{ danger: true }}
+                            onConfirm={() => {
+                              removeComment(comment._id);
+                            }}
+                          >
+                            <Button
+                              danger
+                              size="small"
+                              icon={<DeleteOutlined />}
+                              style={{ minWidth: 24 }}
+                            />
+                          </Popconfirm>
+                        </Space>
+                      </Flex>
+                    </Flex>
+                  );
+                })}
               </Flex>
             </Flex>
           }
