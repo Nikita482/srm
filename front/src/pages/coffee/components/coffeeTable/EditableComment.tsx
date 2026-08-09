@@ -172,6 +172,7 @@ const EditableComment = ({
                           <Popconfirm
                             title="Удалить комент?"
                             okText="Удалить"
+                            description="Комент будет удалён безвозвратно."
                             okButtonProps={{ danger: true }}
                             onConfirm={() => {
                               removeComment(comment._id);

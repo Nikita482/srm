@@ -112,6 +112,7 @@ const CoffeeControls = () => {
                     <Popconfirm
                       title="Удалить неделю?"
                       okText="Удалить"
+                      description="Неделя будет удалена безвозвратно."
                       okButtonProps={{ danger: true }}
                       onConfirm={() => deleteRow(week._id)}
                     >
@@ -189,6 +190,7 @@ const CoffeeControls = () => {
                     <Popconfirm
                       title="Удалить месяц?"
                       okText="Удалить"
+                      description="Месяц будет удалён безвозвратно."
                       okButtonProps={{ danger: true }}
                       onConfirm={() => deleteMonth(month._id)}
                     >
