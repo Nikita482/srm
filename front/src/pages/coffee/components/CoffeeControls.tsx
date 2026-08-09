@@ -52,6 +52,10 @@ const CoffeeControls = () => {
         value={selectedMonthId}
         options={monthOptions}
         onChange={(monthId) => dispatch(setSelectedMonthId(monthId))}
+        showSearch={{
+          filterOption: (input, option) =>
+            option.label.toLowerCase().includes(input.toLowerCase()),
+        }}
       />
 
       <Popover
