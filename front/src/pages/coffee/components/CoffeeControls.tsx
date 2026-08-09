@@ -44,12 +44,6 @@ const CoffeeControls = () => {
 
   const [monthName, setMonthName] = useState("");
 
-  // Добавить кнопку 🗑 рядом с названием месяца в Select
-  // Добавить удаление месяца внутрь Popover рядом с созданием нового месяца.
-  // // Select + иконка 🗑 !!!!!!! — выбрать месяц из списка и рядом нажать удалить.
-  // // Поиск + список — поле поиска сверху, ниже найденный месяц с 🗑.
-  // Показать перед удалением краткую статистику — например, «4 недели, 12 записей».
-
   return (
     <>
       <Select
@@ -75,6 +69,7 @@ const CoffeeControls = () => {
                 value={selectedDate}
                 allowClear={false}
                 onChange={handleDateChange}
+                disabled={newRow?.date.length >= 7}
               />
 
               <Button
@@ -125,31 +120,6 @@ const CoffeeControls = () => {
                   </Flex>
                 </Flex>
               ))}
-
-              {/*
-              <Flex key={month._id} vertical>
-                  {index > 0 && <Divider style={{ margin: "5px 0" }} />}
-
-                  <Flex
-                    align="center"
-                    justify="space-between"
-                    style={{ width: "100%" }}
-                  >
-                    <Typography.Text>
-                      <CalendarOutlined /> месяц: {month.month}
-                    </Typography.Text>
-
-                    <Popconfirm
-                      title="Удалить месяц?"
-                      okText="Удалить"
-                      okButtonProps={{ danger: true }}
-                      // onConfirm={() => deleteRow(week._id)}
-                    >
-                      <Button danger size="small" icon={<DeleteOutlined />} />
-                    </Popconfirm>
-                  </Flex>
-                </Flex>
-              */}
             </Flex>
           </Flex>
         }

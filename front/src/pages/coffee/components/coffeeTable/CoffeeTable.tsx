@@ -28,6 +28,7 @@ const CoffeeTable = () => {
     {
       title: "Число",
       dataIndex: "date",
+      width: 180,
       render: (dates, record) => (
         <EditableDates
           dates={dates}
@@ -45,6 +46,16 @@ const CoffeeTable = () => {
     {
       title: "Зп",
       dataIndex: "salary",
+      onCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
+      onHeaderCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
       render: (_, record) => (
         <EditableNumber
           record={record}
@@ -58,7 +69,16 @@ const CoffeeTable = () => {
     {
       title: "Траты",
       dataIndex: "expenses",
-      // width: 150,
+      onCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
+      onHeaderCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
       render: (_, record) => (
         <EditableNumber
           record={record}
@@ -72,7 +92,16 @@ const CoffeeTable = () => {
     {
       title: "Инкас",
       dataIndex: "cashCollection",
-      // width: 150,
+      onCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
+      onHeaderCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
       render: (_, record) => (
         <EditableNumber
           record={record}
@@ -86,7 +115,16 @@ const CoffeeTable = () => {
     {
       title: "Заплатили",
       dataIndex: "paid",
-      // width: 150,
+      onCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
+      onHeaderCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
       render: (_, record) => (
         <EditableNumber
           record={record}
@@ -100,7 +138,16 @@ const CoffeeTable = () => {
     {
       title: "Комент",
       dataIndex: "comment",
-      // width: 150,
+      onCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
+      onHeaderCell: () => ({
+        style: {
+          padding: "16px 0px",
+        },
+      }),
       render: (comments, record) => {
         return (
           <EditableComment
@@ -121,6 +168,11 @@ const CoffeeTable = () => {
       title: "Начислено",
       render: (_, record) =>
         `${(record.cashCollection + record.paid).toLocaleString("ru-RU")} ₽`,
+      onCell: () => ({
+        style: {
+          borderLeft: "1px solid #d9d9d9",
+        },
+      }),
     },
     {
       title: "Осталось",
@@ -137,7 +189,8 @@ const CoffeeTable = () => {
         dataSource={[...(currentMonth?.data ?? [])]}
         rowKey="_id"
         tableLayout="auto"
-        scroll={{ x: 1000 }}
+        pagination={false}
+        scroll={{ x: "max-content" }}
       />
 
       <div style={{ height: "1000px" }}></div>

@@ -10,6 +10,7 @@ import { useState } from "react";
 import type { Dayjs } from "dayjs";
 import type { CoffeeRow } from "../types/coffee";
 import { initialRow } from "../constants/initialRow";
+import { message } from "antd";
 
 export const useCoffeeRows = () => {
   const [addRowRequest] = useAddRowMutation();
@@ -32,6 +33,14 @@ export const useCoffeeRows = () => {
 
   // добавление новой строки в месяц
   const addRow = () => {
+    const weeksCount =
+      months?.find((month) => month._id === selectedMonthId)?.data.length ?? 0;
+
+    if (weeksCount >= 6) {
+      message.warning("В месяце может быть максимум 6 недель");
+      return;
+    }
+
     addRowRequest({ selectedMonthId, newRow });
     setNewRow((prev) => ({ ...prev, date: [] }));
   };

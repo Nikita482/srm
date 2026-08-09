@@ -18,6 +18,7 @@ const EditableNumber = ({
     <InputNumber
       size="small"
       variant="borderless"
+      width={60}
       value={
         editingRow?._id === record._id
           ? Number(editingRow[field])

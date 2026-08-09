@@ -38,6 +38,7 @@ const EditableDates = ({
                   if (!day) return;
                   addEditDate(day.date());
                 }}
+                disabled={editingRow?.date.length >= 7}
               />
 
               <Button
@@ -65,9 +66,11 @@ const EditableDates = ({
         </Button>
       </Popover>
 
-      {dates.map((day) => (
-        <Tag key={day}>{day}</Tag>
-      ))}
+      <Space wrap>
+        {dates.map((day) => (
+          <Tag key={day}>{day}</Tag>
+        ))}
+      </Space>
     </Space>
   );
 };
