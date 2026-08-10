@@ -5,6 +5,7 @@ import {
   Flex,
   Input,
   InputNumber,
+  message,
   Popconfirm,
   Popover,
   Select,
@@ -43,6 +44,7 @@ const EditableComment = ({
 
         <Popover
           trigger="click"
+          styles={{ root: { position: "fixed" } }}
           open={openRowId === record._id}
           onOpenChange={(open) => {
             if (open) {
@@ -56,8 +58,11 @@ const EditableComment = ({
           content={
             <Flex vertical gap={5}>
               <Typography.Text strong>Добавить комент</Typography.Text>
+
+              {/* Select + DatePicker */}
               <Flex gap={5}>
                 <Select
+                  getPopupContainer={(trigger) => trigger.parentElement!}
                   style={{ flex: 1 }}
                   size="small"
                   value={operationDraft.type}
@@ -71,6 +76,7 @@ const EditableComment = ({
                 />
 
                 <DatePicker
+                  getPopupContainer={(trigger) => trigger.parentElement!}
                   size="small"
                   placeholder="День:"
                   style={{ flex: 1 }}
@@ -90,13 +96,13 @@ const EditableComment = ({
                 />
               </Flex>
 
+              {/* Input + InputNumber */}
               <Flex gap={5}>
                 <Input
                   placeholder="Комент:"
                   size="small"
                   maxLength={80}
                   showCount
-                  // style={{ minWidth: 0, flex: 1 }}
                   value={operationDraft.text}
                   onChange={(e) =>
                     setOperationDraft((prev) => ({
@@ -123,6 +129,7 @@ const EditableComment = ({
                 />
               </Flex>
 
+              {/* Сохранить */}
               <Button
                 disabled={
                   !hasChanges &&
@@ -140,6 +147,7 @@ const EditableComment = ({
 
               <Typography.Text strong>Удалить комент</Typography.Text>
 
+              {/* коменты для удаления */}
               <Flex
                 vertical
                 gap={5}
@@ -150,19 +158,27 @@ const EditableComment = ({
               >
                 {editingRow?.comment.map((comment, index) => {
                   const formatted = formatComment(comment);
+                  const info = `${formatted.amount} ${formatted.date} ${formatted.operation}`;
 
                   return (
                     <Flex key={comment?._id} vertical>
                       {index > 0 && <Divider style={{ margin: "5px 0" }} />}
 
                       <Flex align="center" justify="space-between">
-                        <Typography.Text>
-                          {formatted.amount} {formatted.operation}{" "}
-                          {formatted.date}
-                        </Typography.Text>
+                        <Typography.Text>{info}</Typography.Text>
 
                         <Space>
-                          <Popover content={formatted.text} trigger="click">
+                          <Popover
+                            content={
+                              <div style={{ maxWidth: 250 }}>
+                                {formatted.text}
+                              </div>
+                            }
+                            trigger="click"
+                            getPopupContainer={(trigger) =>
+                              trigger.parentElement!
+                            }
+                          >
                             <Button
                               type="text"
                               size="small"
@@ -171,12 +187,24 @@ const EditableComment = ({
                           </Popover>
 
                           <Popconfirm
+                            getPopupContainer={(trigger) =>
+                              trigger.parentElement!
+                            }
                             title="Удалить комент?"
                             okText="Удалить"
-                            description="Комент будет удалён безвозвратно."
+                            description={
+                              <div style={{ maxWidth: 250 }}>
+                                <Divider style={{ margin: "5px 0" }} />
+                                <p>{`Комент: ${info}`}</p>
+                                <p>{`Текст: ${formatted.text}`}</p>
+                                <Divider style={{ margin: "5px 0" }} />
+                                <p>Комент будет удален безвозвратно!</p>
+                              </div>
+                            }
                             okButtonProps={{ danger: true }}
                             onConfirm={() => {
                               removeComment(comment._id);
+                              message.success("Не забудь сохранить!");
                             }}
                           >
                             <Button

@@ -3,6 +3,7 @@ import {
   DatePicker,
   Divider,
   Flex,
+  message,
   Popconfirm,
   Popover,
   Space,
@@ -31,6 +32,7 @@ const EditableDates = ({
     <Space>
       <Popover
         trigger="click"
+        styles={{ root: { position: "fixed" } }}
         open={openRowId === record._id}
         onOpenChange={(open) => {
           if (open) {
@@ -45,6 +47,7 @@ const EditableDates = ({
           <Flex gap={10} vertical style={{ maxWidth: "270px" }}>
             <Flex gap={10} justify="space-between">
               <DatePicker
+                getPopupContainer={(trigger) => trigger.parentElement!}
                 size="small"
                 placeholder="+ день"
                 format="D"
@@ -78,11 +81,15 @@ const EditableDates = ({
                     </Typography.Text>
 
                     <Popconfirm
+                      getPopupContainer={(trigger) => trigger.parentElement!}
                       title={`Удалить день ${day}?`}
                       okText="Удалить"
                       description="День будет удален безвозвратно."
                       okButtonProps={{ danger: true }}
-                      onConfirm={() => removeEditDate(day)}
+                      onConfirm={() => {
+                        removeEditDate(day);
+                        message.success("Не забудь сохранить!");
+                      }}
                     >
                       <Button danger size="small" icon={<DeleteOutlined />} />
                     </Popconfirm>
@@ -98,10 +105,7 @@ const EditableDates = ({
         </Button>
       </Popover>
 
-      <Space
-        wrap
-        // size={50}
-      >
+      <Space wrap>
         {dates.map((day) => (
           <Tag
             key={day}

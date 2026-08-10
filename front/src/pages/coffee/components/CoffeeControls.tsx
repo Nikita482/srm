@@ -48,6 +48,7 @@ const CoffeeControls = () => {
     <>
       <Popover
         trigger="click"
+        styles={{ root: { position: "fixed" } }}
         content={
           <Flex vertical align="flex-start" gap={5}>
             <Typography.Text strong>Добавить неделю</Typography.Text>
@@ -123,6 +124,7 @@ const CoffeeControls = () => {
 
       <Popover
         trigger="click"
+        styles={{ root: { position: "fixed" } }}
         content={
           <Flex vertical gap={10}>
             <Typography.Text strong>Добавить месяц</Typography.Text>
@@ -181,6 +183,7 @@ const CoffeeControls = () => {
                     </Typography.Text>
 
                     <Popconfirm
+                      getPopupContainer={(trigger) => trigger.parentElement!}
                       title="Удалить месяц?"
                       okText="Удалить"
                       description="Месяц будет удалён безвозвратно."
