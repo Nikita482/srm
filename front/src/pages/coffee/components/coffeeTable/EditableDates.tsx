@@ -1,6 +1,20 @@
-import { Button, DatePicker, Flex, Popover, Space, Tag } from "antd";
+import {
+  Button,
+  DatePicker,
+  Divider,
+  Flex,
+  Popconfirm,
+  Popover,
+  Space,
+  Tag,
+  Typography,
+} from "antd";
 import { useState } from "react";
-import { EditOutlined } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 
 const EditableDates = ({
   dates,
@@ -28,12 +42,14 @@ const EditableDates = ({
           }
         }}
         content={
-          <Flex gap={10} vertical>
+          <Flex gap={10} vertical style={{ maxWidth: "270px" }}>
             <Flex gap={10} justify="space-between">
               <DatePicker
                 size="small"
                 placeholder="+ день"
                 format="D"
+                placement="bottomLeft"
+                style={{ flex: 1 }}
                 onChange={(day) => {
                   if (!day) return;
                   addEditDate(day.date());
@@ -51,13 +67,29 @@ const EditableDates = ({
               </Button>
             </Flex>
 
-            <Space>
-              {editingRow?.date.map((day) => (
-                <Tag key={day} closable onClose={() => removeEditDate(day)}>
-                  {day}
-                </Tag>
+            <Flex vertical>
+              {editingRow?.date.map((day, index) => (
+                <Flex key={day} vertical>
+                  {index > 0 && <Divider style={{ margin: "5px 0" }} />}
+
+                  <Flex align="center" justify="space-between" gap={10}>
+                    <Typography.Text>
+                      <CalendarOutlined /> День: {day}
+                    </Typography.Text>
+
+                    <Popconfirm
+                      title={`Удалить день ${day}?`}
+                      okText="Удалить"
+                      description="День будет удален безвозвратно."
+                      okButtonProps={{ danger: true }}
+                      onConfirm={() => removeEditDate(day)}
+                    >
+                      <Button danger size="small" icon={<DeleteOutlined />} />
+                    </Popconfirm>
+                  </Flex>
+                </Flex>
               ))}
-            </Space>
+            </Flex>
           </Flex>
         }
       >
@@ -66,9 +98,24 @@ const EditableDates = ({
         </Button>
       </Popover>
 
-      <Space wrap>
+      <Space
+        wrap
+        // size={50}
+      >
         {dates.map((day) => (
-          <Tag key={day}>{day}</Tag>
+          <Tag
+            key={day}
+            style={{
+              width: 25,
+              height: 25,
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {day}
+          </Tag>
         ))}
       </Space>
     </Space>

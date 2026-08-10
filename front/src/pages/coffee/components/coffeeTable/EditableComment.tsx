@@ -74,6 +74,7 @@ const EditableComment = ({
                   size="small"
                   placeholder="День:"
                   style={{ flex: 1 }}
+                  placement="bottomLeft"
                   format="D MMMM"
                   value={
                     operationDraft.date

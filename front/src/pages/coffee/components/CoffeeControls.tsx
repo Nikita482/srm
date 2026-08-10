@@ -46,18 +46,6 @@ const CoffeeControls = () => {
 
   return (
     <>
-      <Select
-        style={{ width: 150 }}
-        size="small"
-        value={selectedMonthId}
-        options={monthOptions}
-        onChange={(monthId) => dispatch(setSelectedMonthId(monthId))}
-        showSearch={{
-          filterOption: (input, option) =>
-            option.label.toLowerCase().includes(input.toLowerCase()),
-        }}
-      />
-
       <Popover
         trigger="click"
         content={
@@ -70,6 +58,7 @@ const CoffeeControls = () => {
                 format="D"
                 size="small"
                 placeholder="+ день"
+                placement="bottomLeft"
                 value={selectedDate}
                 allowClear={false}
                 onChange={handleDateChange}
@@ -209,6 +198,18 @@ const CoffeeControls = () => {
       >
         <Button size="small">месяца</Button>
       </Popover>
+
+      <Select
+        style={{ width: 150 }}
+        size="small"
+        value={selectedMonthId}
+        options={monthOptions}
+        onChange={(monthId) => dispatch(setSelectedMonthId(monthId))}
+        showSearch={{
+          filterOption: (input, option) =>
+            option.label.toLowerCase().includes(input.toLowerCase()),
+        }}
+      />
     </>
   );
 };
