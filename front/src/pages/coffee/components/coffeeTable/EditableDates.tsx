@@ -3,14 +3,12 @@ import {
   DatePicker,
   Divider,
   Flex,
-  message,
   Popconfirm,
   Popover,
   Space,
   Tag,
   Typography,
 } from "antd";
-import { useState } from "react";
 import {
   CalendarOutlined,
   DeleteOutlined,
@@ -24,52 +22,37 @@ const EditableDates = ({
   setEditingRow,
   addEditDate,
   removeEditDate,
-  saveEditingRow,
 }) => {
-  const [openRowId, setOpenRowId] = useState<string | null>(null);
-
   return (
     <Space>
       <Popover
         trigger="click"
         styles={{ root: { position: "fixed" } }}
-        open={openRowId === record._id}
         onOpenChange={(open) => {
           if (open) {
-            setOpenRowId(record._id);
             setEditingRow(record);
           } else {
-            setOpenRowId(null);
             setEditingRow(null);
           }
         }}
         content={
           <Flex gap={10} vertical style={{ maxWidth: "270px" }}>
-            <Flex gap={10} justify="space-between">
-              <DatePicker
-                getPopupContainer={(trigger) => trigger.parentElement!}
-                size="small"
-                placeholder="+ день"
-                format="D"
-                placement="bottomLeft"
-                style={{ flex: 1 }}
-                onChange={(day) => {
-                  if (!day) return;
-                  addEditDate(day.date());
-                }}
-                disabled={editingRow?.date.length >= 7}
-              />
+            {/* добовление дней недели */}
+            <DatePicker
+              getPopupContainer={(trigger) => trigger.parentElement!}
+              size="small"
+              placeholder="+ день"
+              format="D"
+              placement="bottomLeft"
+              style={{ flex: 1 }}
+              onChange={(day) => {
+                if (!day) return;
+                addEditDate(day.date());
+              }}
+              disabled={editingRow?.date.length >= 7}
+            />
 
-              <Button
-                onClick={() => {
-                  saveEditingRow(record._id);
-                  setOpenRowId(null);
-                }}
-              >
-                Сохранить
-              </Button>
-            </Flex>
-
+            {/* удаление дней недели */}
             <Flex vertical>
               {editingRow?.date.map((day, index) => (
                 <Flex key={day} vertical>
@@ -88,7 +71,6 @@ const EditableDates = ({
                       okButtonProps={{ danger: true }}
                       onConfirm={() => {
                         removeEditDate(day);
-                        message.success("Не забудь сохранить!");
                       }}
                     >
                       <Button danger size="small" icon={<DeleteOutlined />} />

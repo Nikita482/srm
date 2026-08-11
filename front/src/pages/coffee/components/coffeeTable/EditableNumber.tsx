@@ -12,8 +12,13 @@ const EditableNumber = ({
   field: keyof CoffeeRow;
   editingRow: CoffeeRow | null;
   setEditingRow: React.Dispatch<React.SetStateAction<CoffeeRow | null>>;
-  saveEditingRow: (id: string) => void;
+  saveEditingRow: (row: CoffeeRow) => void;
 }) => {
+  const saveValue = () => {
+    if (!editingRow || editingRow._id !== record._id) return;
+    saveEditingRow(editingRow);
+  };
+
   return (
     <InputNumber
       size="small"
@@ -34,7 +39,7 @@ const EditableNumber = ({
       }}
       onChange={(v) => {
         setEditingRow((prev) => {
-          if (!prev) return prev;
+          if (!prev || prev._id !== record._id) return prev;
 
           return {
             ...prev,
@@ -42,18 +47,49 @@ const EditableNumber = ({
           };
         });
       }}
-      onBlur={() => {
-        if (editingRow?._id === record._id) {
-          saveEditingRow(record._id);
-        }
-      }}
-      onPressEnter={() => {
-        if (editingRow?._id === record._id) {
-          saveEditingRow(record._id);
-        }
-      }}
+      onBlur={saveValue}
+      onPressEnter={saveValue}
     />
   );
 };
 
 export default EditableNumber;
+
+// import { InputNumber } from "antd";
+// import type { CoffeeRow } from "../../types/coffee";
+
+// const EditableNumber = ({
+//   record,
+//   field,
+//   saveEditingRow,
+// }: {
+//   record: CoffeeRow;
+//   field: keyof CoffeeRow;
+//   saveEditingRow: (row: CoffeeRow) => void;
+// }) => {
+//   const saveValue = (value: number) => {
+//     const updatedRow = {
+//       ...record,
+//       [field]: value,
+//     };
+
+//     saveEditingRow(updatedRow);
+//   };
+
+//   return (
+//     <InputNumber
+//       size="small"
+//       variant="borderless"
+//       style={{ width: 70 }}
+//       value={Number(record[field])}
+//       formatter={(value) =>
+//         `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽"
+//       }
+//       onChange={(value) => {
+//         saveValue(value ?? 0);
+//       }}
+//     />
+//   );
+// };
+
+// export default EditableNumber;

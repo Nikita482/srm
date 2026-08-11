@@ -29,7 +29,6 @@ export const useCoffeeRows = () => {
     text: "",
     date: null as string | null,
   });
-  const [hasChanges, setHasChanges] = useState(false);
 
   // добавление новой строки в месяц
   const addRow = () => {
@@ -69,74 +68,75 @@ export const useCoffeeRows = () => {
     }));
   };
 
-  // удаляю дни из тестовой недели
-  const removeEditDate = (day: string) => {
-    setEditingRow((prev) => {
-      if (!prev) return prev;
+  // + удаляю дни из недели
+  const removeEditDate = async (day: string) => {
+    if (!editingRow) return;
 
-      const newDays = prev.date.filter((item) => item !== day);
+    const updatedRow = {
+      ...editingRow,
+      date: editingRow.date.filter((item) => item !== day),
+    };
 
-      return { ...prev, date: newDays };
-    });
+    setEditingRow(updatedRow);
+    await saveEditingRow(updatedRow);
   };
 
-  // добовляю дни в тестовую неделю
-  const addEditDate = (day: number) => {
-    setEditingRow((prev) => ({
-      ...prev,
-      date: prev.date.includes(String(day))
-        ? prev.date
-        : [...prev.date, String(day)],
-    }));
+  // + добовляю дни в тестовую неделю
+  const addEditDate = async (day: number) => {
+    if (!editingRow) return;
+
+    const dayString = String(day);
+
+    if (editingRow.date.includes(dayString)) return;
+
+    const updatedRow = {
+      ...editingRow,
+      date: [...editingRow.date, dayString],
+    };
+
+    setEditingRow(updatedRow);
+
+    await saveEditingRow(updatedRow);
   };
 
-  // создание коментария
-  const createComment = () => {
-    if (!operationDraft.type) return null;
+  // + удаление коментария
+  const removeComment = async (commentId: string) => {
+    if (!editingRow) return;
 
-    return {
+    const updatedRow = {
+      ...editingRow,
+      comment: editingRow.comment.filter(
+        (comment) => comment._id !== commentId,
+      ),
+    };
+
+    setEditingRow(updatedRow);
+
+    await saveEditingRow(updatedRow);
+  };
+
+  // + Создаёт и добавляет комментарий
+  const saveComment = async () => {
+    if (!editingRow) return;
+    if (!operationDraft.type || !operationDraft.text || !operationDraft.date)
+      return;
+
+    const newComment = {
       _id: crypto.randomUUID(),
       operation: operationDraft.type,
       amount: Number(operationDraft.amount),
       text: operationDraft.text,
       date: operationDraft.date,
     };
-  };
 
-  // удаление коментария
-  const removeComment = (commentId) => {
-    setEditingRow((prev) => {
-      if (!prev) return prev;
-
-      return {
-        ...prev,
-        comment: prev.comment.filter((com) => com._id !== commentId),
-      };
-    });
-    setHasChanges(true);
-  };
-
-  // собрает всю обновлённую неделю
-  const buildUpdatedRow = () => {
-    const comment = createComment();
-
-    return {
+    const updatedRow = {
       ...editingRow,
-      comment: [...editingRow.comment, ...(comment ? [comment] : [])],
+      comment: [...editingRow.comment, newComment],
     };
-  };
-
-  // обновляю всю неделю
-  const saveEditingRow = async (rowId: string) => {
-    const updatedRow = buildUpdatedRow();
 
     setEditingRow(updatedRow);
 
-    await updateRowRequest({
-      selectedMonthId,
-      rowId,
-      editingRow: updatedRow,
-    });
+    await saveEditingRow(updatedRow);
 
     setOperationDraft({
       type: "",
@@ -144,7 +144,15 @@ export const useCoffeeRows = () => {
       text: "",
       date: null,
     });
-    setHasChanges(false);
+  };
+
+  // + обновляю всю неделю
+  const saveEditingRow = async (updatedRow: CoffeeRow) => {
+    await updateRowRequest({
+      selectedMonthId,
+      rowId: updatedRow._id,
+      editingRow: updatedRow,
+    });
   };
 
   // поиск недель для удаления
@@ -152,6 +160,7 @@ export const useCoffeeRows = () => {
     (week) => week?._id === selectedMonthId,
   );
 
+  // Удаление строки
   const deleteRow = async (rowId: string) => {
     await deleteRowRequest({ selectedMonthId, rowId });
   };
@@ -171,8 +180,8 @@ export const useCoffeeRows = () => {
     operationDraft,
     setOperationDraft,
     removeComment,
-    hasChanges,
     getWeeksForDelete,
     deleteRow,
+    saveComment,
   };
 };

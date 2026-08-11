@@ -5,7 +5,6 @@ import {
   Flex,
   Input,
   InputNumber,
-  message,
   Popconfirm,
   Popover,
   Select,
@@ -20,7 +19,6 @@ import {
 import { formatComment } from "../../utils/formatComment";
 import { operationOptions } from "../../constants/operationOptions";
 import dayjs from "dayjs";
-import { useState } from "react";
 
 const EditableComment = ({
   comments,
@@ -28,13 +26,10 @@ const EditableComment = ({
   setEditingRow,
   operationDraft,
   setOperationDraft,
-  hasChanges,
-  saveEditingRow,
+  saveComment,
   editingRow,
   removeComment,
 }) => {
-  const [openRowId, setOpenRowId] = useState<string | null>(null);
-
   return (
     <Flex vertical gap={4} align="flex-start">
       <Flex gap={10}>
@@ -45,14 +40,11 @@ const EditableComment = ({
         <Popover
           trigger="click"
           styles={{ root: { position: "fixed" } }}
-          open={openRowId === record._id}
           onOpenChange={(open) => {
             if (open) {
-              setOpenRowId(record._id);
               setEditingRow(record);
             } else {
               setEditingRow(null);
-              setOpenRowId(null);
             }
           }}
           content={
@@ -132,15 +124,12 @@ const EditableComment = ({
               {/* Сохранить */}
               <Button
                 disabled={
-                  !hasChanges &&
-                  (!operationDraft.type ||
-                    !operationDraft.date ||
-                    !operationDraft.text ||
-                    !operationDraft.amount)
+                  !operationDraft.type ||
+                  !operationDraft.date ||
+                  !operationDraft.text ||
+                  !operationDraft.amount
                 }
-                onClick={() => {
-                  saveEditingRow(record._id);
-                }}
+                onClick={saveComment}
               >
                 Сохранить
               </Button>
@@ -204,7 +193,6 @@ const EditableComment = ({
                             okButtonProps={{ danger: true }}
                             onConfirm={() => {
                               removeComment(comment._id);
-                              message.success("Не забудь сохранить!");
                             }}
                           >
                             <Button

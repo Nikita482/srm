@@ -17,7 +17,7 @@ const CoffeeTable = () => {
     operationDraft,
     setOperationDraft,
     removeComment,
-    hasChanges,
+    saveComment,
   } = useCoffeeRows();
 
   const columns = [
@@ -33,7 +33,6 @@ const CoffeeTable = () => {
           setEditingRow={setEditingRow}
           addEditDate={addEditDate}
           removeEditDate={removeEditDate}
-          saveEditingRow={saveEditingRow}
         />
       ),
     },
@@ -150,8 +149,7 @@ const CoffeeTable = () => {
             setEditingRow={setEditingRow}
             operationDraft={operationDraft}
             setOperationDraft={setOperationDraft}
-            hasChanges={hasChanges}
-            saveEditingRow={saveEditingRow}
+            saveComment={saveComment}
             editingRow={editingRow}
             removeComment={removeComment}
           />
