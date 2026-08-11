@@ -18,6 +18,11 @@
   .coffee__controls {
     width: 100%;
   }
+
+  .coffee__actions {
+    flex: 1;
+    justify-content: space-evenly;
+  }
 }
 
 @media (max-width: 350px) {
@@ -31,7 +36,6 @@
 
 @media (max-width: 300px) {
   .coffee__actions {
-    width: 100%;
     justify-content: space-between;
   }
 }

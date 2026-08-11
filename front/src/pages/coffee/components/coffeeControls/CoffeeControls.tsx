@@ -99,7 +99,7 @@ const CoffeeControls = () => {
                 </Button>
               </Flex>
 
-              <Space>
+              <Space wrap>
                 {newRow.date.map((day) => (
                   <Tag key={day} closable onClose={() => removeDate(day)}>
                     {day}
@@ -109,21 +109,13 @@ const CoffeeControls = () => {
 
               <Typography.Text strong>Удалить неделю</Typography.Text>
 
-              <Flex
-                vertical
-                style={{
-                  // maxHeight: 175,
-                  // overflowY: "auto",
-                  width: "100%",
-                }}
-                gap={5}
-              >
+              <Flex vertical style={{ width: "100%" }} gap={5}>
                 {getWeeksForDelete?.data.map((week, index) => (
                   <Flex key={week._id} vertical>
                     {index > 0 && <Divider style={{ margin: "5px 0" }} />}
 
                     <Flex align="center" justify="space-between">
-                      <Typography.Text>
+                      <Typography.Text style={{ maxWidth: "85%" }}>
                         <CalendarOutlined /> Неделя: {week.date.join(", ")}
                       </Typography.Text>
 
