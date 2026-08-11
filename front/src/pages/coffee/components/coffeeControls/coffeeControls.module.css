@@ -1,0 +1,37 @@
+.coffee__controls {
+  width: fit-content;
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* .coffee__actions {
+  background-color: red;
+} */
+
+.coffee__select {
+  min-width: 140px;
+}
+
+@media (max-width: 500px) {
+  .coffee__controls {
+    width: 100%;
+  }
+}
+
+@media (max-width: 350px) {
+  .coffee__select {
+    flex: 1;
+  }
+  .coffee__name {
+    display: none;
+  }
+}
+
+@media (max-width: 300px) {
+  .coffee__actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

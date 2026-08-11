@@ -65,9 +65,9 @@ const EditableDates = ({
 
                     <Popconfirm
                       getPopupContainer={(trigger) => trigger.parentElement!}
-                      title={`Удалить день ${day}?`}
+                      title={`Удалить день «${day}»?`}
                       okText="Удалить"
-                      description="День будет удален безвозвратно."
+                      description="День будет удален безвозвратно!"
                       okButtonProps={{ danger: true }}
                       onConfirm={() => {
                         removeEditDate(day);
