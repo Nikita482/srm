@@ -94,27 +94,31 @@ const CoffeeControls = () => {
               }}
               gap={5}
             >
-              {getWeeksForDelete?.data.map((week, index) => (
-                <Flex key={week._id} vertical>
-                  {index > 0 && <Divider style={{ margin: "5px 0" }} />}
+              {getWeeksForDelete?.data.map((week, index) => {
+                // console.log(getWeeksForDelete);
 
-                  <Flex align="center" justify="space-between">
-                    <Typography.Text>
-                      <CalendarOutlined /> Неделя: {week.date.join(", ")}
-                    </Typography.Text>
+                return (
+                  <Flex key={week._id} vertical>
+                    {index > 0 && <Divider style={{ margin: "5px 0" }} />}
 
-                    <Popconfirm
-                      title="Удалить неделю?"
-                      okText="Удалить"
-                      description="Неделя будет удалена безвозвратно."
-                      okButtonProps={{ danger: true }}
-                      onConfirm={() => deleteRow(week._id)}
-                    >
-                      <Button danger size="small" icon={<DeleteOutlined />} />
-                    </Popconfirm>
+                    <Flex align="center" justify="space-between">
+                      <Typography.Text>
+                        <CalendarOutlined /> Неделя: {week.date.join(", ")}
+                      </Typography.Text>
+
+                      <Popconfirm
+                        title="Удалить неделю?"
+                        okText="Удалить"
+                        description="Неделя будет удалена безвозвратно."
+                        okButtonProps={{ danger: true }}
+                        onConfirm={() => deleteRow(week._id)}
+                      >
+                        <Button danger size="small" icon={<DeleteOutlined />} />
+                      </Popconfirm>
+                    </Flex>
                   </Flex>
-                </Flex>
-              ))}
+                );
+              })}
             </Flex>
           </Flex>
         }
@@ -184,9 +188,8 @@ const CoffeeControls = () => {
 
                     <Popconfirm
                       getPopupContainer={(trigger) => trigger.parentElement!}
-                      title="Удалить месяц?"
+                      title={`Удалить месяц «${month.month}»?`}
                       okText="Удалить"
-                      description="Месяц будет удалён безвозвратно."
                       okButtonProps={{ danger: true }}
                       onConfirm={() => deleteMonth(month._id)}
                     >
