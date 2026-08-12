@@ -88,6 +88,26 @@ export const useCoffeeMonth = () => {
     setMonthSearch("");
   };
 
+  // итоги выброного месяца
+  const totalsMonth = (currentMonth?.data ?? []).reduce(
+    (sum, row) => ({
+      days: sum.days + row.date.length,
+      salary: sum.salary + row.salary,
+      expenses: sum.expenses + row.expenses,
+      cashCollection: sum.cashCollection + row.cashCollection,
+      paid: sum.paid + row.paid,
+      comments: sum.comments + row.comment.length,
+    }),
+    {
+      days: 0,
+      salary: 0,
+      expenses: 0,
+      cashCollection: 0,
+      paid: 0,
+      comments: 0,
+    },
+  );
+
   return {
     createMonth,
     months,
@@ -98,5 +118,6 @@ export const useCoffeeMonth = () => {
     monthSearch,
     filteredMonths,
     deleteMonth,
+    totalsMonth,
   };
 };
