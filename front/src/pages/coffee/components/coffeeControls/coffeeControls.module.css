@@ -6,12 +6,8 @@
   box-sizing: border-box;
 }
 
-/* .coffee__actions {
-  background-color: red;
-} */
-
 .coffee__select {
-  min-width: 140px;
+  width: 140px;
 }
 
 @media (max-width: 500px) {

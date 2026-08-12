@@ -14,7 +14,6 @@ import {
 import styles from "./coffeeControls.module.css";
 import { useCoffeeMonth } from "../../hooks/useCoffeeMonths";
 import { useCoffeeRows } from "../../hooks/useCoffeeRows";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setSelectedMonthId } from "../../../../app/store/slices/coffeeSlice";
 import {
@@ -35,6 +34,11 @@ const CoffeeControls = () => {
     deleteMonth,
     months,
     totalsMonth,
+    updateMonth,
+    monthName,
+    setMonthName,
+    newMonthName,
+    setNewMonthName,
   } = useCoffeeMonth();
 
   const {
@@ -49,8 +53,6 @@ const CoffeeControls = () => {
   } = useCoffeeRows();
 
   const dispatch = useDispatch();
-
-  const [monthName, setMonthName] = useState("");
 
   return (
     <Flex align="center" gap={8} wrap className={styles.coffee__controls}>
@@ -150,9 +152,9 @@ const CoffeeControls = () => {
           styles={{ root: { position: "fixed" } }}
           content={
             <Flex vertical gap={10}>
-              <Typography.Text strong>Добавить месяц</Typography.Text>
+              <Typography.Text strong>Создать месяц</Typography.Text>
 
-              <Flex justify="space-between" style={{ width: "100%" }} gap={10}>
+              <Space>
                 <Input
                   size="small"
                   placeholder="Имя месяца:"
@@ -161,18 +163,37 @@ const CoffeeControls = () => {
                 />
 
                 <Button
-                  onClick={async () => {
-                    await createMonth(monthName);
-                    setMonthName("");
-                    setNewRow((prev) => ({ ...prev, date: [] }));
-                  }}
-                  disabled={!monthName.trim()}
                   size="small"
                   type="primary"
+                  disabled={!monthName.trim()}
+                  onClick={async () => {
+                    await createMonth(monthName);
+                    setNewRow((prev) => ({ ...prev, date: [] }));
+                  }}
+                >
+                  Создать
+                </Button>
+              </Space>
+
+              <Typography.Text strong>Редактировать имя месяца</Typography.Text>
+
+              <Space>
+                <Input
+                  size="small"
+                  placeholder="Новое имя месяца:"
+                  value={newMonthName}
+                  onChange={(e) => setNewMonthName(e.target.value)}
+                />
+                <Button
+                  size="small"
+                  disabled={!newMonthName.trim()}
+                  onClick={() => {
+                    updateMonth(selectedMonthId, newMonthName);
+                  }}
                 >
                   Сохранить
                 </Button>
-              </Flex>
+              </Space>
 
               <Typography.Text strong>Удалить месяц</Typography.Text>
 
@@ -222,7 +243,6 @@ const CoffeeControls = () => {
             </Flex>
           }
         >
-          {/* <Button icon={<CalendarFilled />} size="small" /> */}
           <Button icon={<CalendarOutlined />} size="small" />
         </Popover>
 

@@ -94,3 +94,24 @@ export const deleteMonth = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// patch редактирую имя месяца
+export const updateMonth = async (req, res) => {
+  try {
+    const { monthId } = req.params;
+    const { newNameMonth } = req.body;
+
+    const updatedMonth = await Coffee.findByIdAndUpdate(
+      monthId,
+      { $set: { month: newNameMonth } },
+      { returnDocument: "after" },
+    );
+
+    if (!updatedMonth)
+      return res.status(404).json({ message: "Месяц не найден" });
+
+    res.json(updatedMonth);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

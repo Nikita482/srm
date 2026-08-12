@@ -4,6 +4,7 @@ import {
   useCreateMonthMutation,
   useGetMonthsQuery,
   useDeleteMonthMutation,
+  useUpdateMonthMutation,
 } from "../api/coffeeApi";
 import type { RootState } from "../../../app/store/store";
 import { useEffect, useMemo, useState } from "react";
@@ -14,10 +15,13 @@ export const useCoffeeMonth = () => {
   const { data: months, refetch } = useGetMonthsQuery();
   const [createMonthRequest] = useCreateMonthMutation();
   const [deleteMonthRequest] = useDeleteMonthMutation();
+  const [updateMonthRequest] = useUpdateMonthMutation();
   const selectedMonthId = useSelector(
     (state: RootState) => state.coffee.selectedMonthId,
   );
   const [monthSearch, setMonthSearch] = useState("");
+  const [monthName, setMonthName] = useState("");
+  const [newMonthName, setNewMonthName] = useState("");
 
   const dispatch = useDispatch();
 
@@ -33,12 +37,36 @@ export const useCoffeeMonth = () => {
       return;
     }
 
+    setMonthName("");
+
     const newMonth = await createMonthRequest({
       month: monthName,
       data: [],
     }).unwrap();
 
     dispatch(setSelectedMonthId(newMonth._id));
+  };
+
+  // редактирую имя месяца
+  const updateMonth = async (monthId: string, newNameMonth: string) => {
+    const exists = months?.some(
+      (item) =>
+        item.month.trim().toLowerCase() === newMonthName.trim().toLowerCase(),
+    );
+
+    if (exists) {
+      message.warning("Месяц с таким названием уже существует!");
+      return;
+    }
+
+    if (!selectedMonthId) {
+      message.warning("Месяц не выбран!");
+      return;
+    }
+
+    setNewMonthName("");
+
+    await updateMonthRequest({ monthId, newNameMonth }).unwrap();
   };
 
   // ищу выбраный месяц по селекту
@@ -119,5 +147,10 @@ export const useCoffeeMonth = () => {
     filteredMonths,
     deleteMonth,
     totalsMonth,
+    updateMonth,
+    monthName,
+    setMonthName,
+    newMonthName,
+    setNewMonthName,
   };
 };

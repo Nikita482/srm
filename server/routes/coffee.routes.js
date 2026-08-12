@@ -7,6 +7,7 @@ import {
   updateRow,
   deleteRow,
   deleteMonth,
+  updateMonth,
 } from "../controllers/coffee.controller.js";
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.post("/:id/row", addRow);
 router.patch("/:monthId/row/:rowId", updateRow);
 router.delete("/:monthId/row/:rowId", deleteRow);
 router.delete("/:monthId", deleteMonth);
+router.patch("/:monthId", updateMonth);
 
 export default router;
