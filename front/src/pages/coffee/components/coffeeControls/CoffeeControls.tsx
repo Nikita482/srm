@@ -20,8 +20,8 @@ import { setSelectedMonthId } from "../../../../app/store/slices/coffeeSlice";
 import {
   DeleteOutlined,
   CalendarOutlined,
-  CalendarFilled,
   BarChartOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 
 const CoffeeControls = () => {
@@ -138,7 +138,7 @@ const CoffeeControls = () => {
           }
         >
           <Button
-            icon={<CalendarOutlined />}
+            icon={<UnorderedListOutlined />}
             size="small"
             disabled={!months?.length}
           />
@@ -222,52 +222,9 @@ const CoffeeControls = () => {
             </Flex>
           }
         >
-          <Button icon={<CalendarFilled />} size="small" />
+          {/* <Button icon={<CalendarFilled />} size="small" /> */}
+          <Button icon={<CalendarOutlined />} size="small" />
         </Popover>
-
-        {/* итоги */}
-        {/* <Popover
-          trigger="click"
-          styles={{ root: { position: "fixed" } }}
-          content={
-            <Flex vertical gap={5}>
-              <Typography.Text strong>Итоги месяца</Typography.Text>
-
-              <Divider style={{ margin: "5px 0" }} />
-
-              <Typography.Text>Дней: x</Typography.Text>
-
-              <Divider style={{ margin: "5px 0" }} />
-
-              <Typography.Text>
-                Траты: {totalsMonth.expenses.toLocaleString("ru-RU")} ₽
-              </Typography.Text>
-              <Typography.Text>
-                Заплатили: {totalsMonth.paid.toLocaleString("ru-RU")} ₽
-              </Typography.Text>
-
-              <Typography.Text>
-                Инкас: {totalsMonth.cashCollection.toLocaleString("ru-RU")} ₽
-              </Typography.Text>
-              <Typography.Text>
-                Коментов: {totalsMonth.comments}
-              </Typography.Text>
-
-              <Divider style={{ margin: "5px 0" }} />
-
-              <Typography.Text>
-                Зп: {totalsMonth.salary.toLocaleString("ru-RU")} ₽
-              </Typography.Text>
-              <Typography.Text>Начислено: 50 000 ₽</Typography.Text>
-
-              <Divider style={{ margin: "5px 0" }} />
-
-              <Typography.Text strong>Осталось: x ₽</Typography.Text>
-            </Flex>
-          }
-        >
-          <Button icon={<BarChartOutlined />} size="small" />
-        </Popover> */}
 
         {/* итоги */}
         <Popover
