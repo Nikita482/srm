@@ -48,7 +48,7 @@ const EditableComment = ({
             }
           }}
           content={
-            <Flex vertical gap={5}>
+            <Flex vertical gap={5} style={{ width: 280 }}>
               <Typography.Text strong>Добавить комент</Typography.Text>
 
               {/* Select + DatePicker */}
