@@ -22,6 +22,7 @@ import {
   BarChartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
+import TotalRow from "./TotalRow";
 
 const CoffeeControls = () => {
   const {
@@ -265,72 +266,65 @@ const CoffeeControls = () => {
 
               <Divider style={{ margin: "5px 0" }} />
 
-              {/* Дни */}
-              <Flex justify="space-between">
-                <Typography.Text type="secondary">Дней</Typography.Text>
-                <Typography.Text>{totalsMonth.days}</Typography.Text>
-              </Flex>
+              {/* Дней +  Коментов*/}
+              <>
+                <TotalRow label="Дней" value={String(totalsMonth.days)} />
 
-              {/* Траты */}
-              <Flex justify="space-between">
-                <Typography.Text type="secondary">Траты</Typography.Text>
-                <Typography.Text>
-                  {totalsMonth.expenses.toLocaleString("ru-RU")} ₽
-                </Typography.Text>
-              </Flex>
-
-              {/* Инкас */}
-              <Flex justify="space-between">
-                <Typography.Text type="secondary">Инкас</Typography.Text>
-                <Typography.Text>
-                  {totalsMonth.cashCollection.toLocaleString("ru-RU")} ₽
-                </Typography.Text>
-              </Flex>
-
-              {/* Заплатили */}
-              <Flex justify="space-between">
-                <Typography.Text type="secondary">Заплатили</Typography.Text>
-                <Typography.Text>
-                  {totalsMonth.paid.toLocaleString("ru-RU")} ₽
-                </Typography.Text>
-              </Flex>
-
-              {/* Коменты */}
-              <Flex justify="space-between">
-                <Typography.Text type="secondary">Коментов</Typography.Text>
-                <Typography.Text>{totalsMonth.comments}</Typography.Text>
-              </Flex>
+                <TotalRow
+                  label="Коментов"
+                  value={String(totalsMonth.comments)}
+                />
+              </>
 
               <Divider style={{ margin: "5px 0" }} />
 
-              {/* Зп */}
-              <Flex justify="space-between">
-                <Typography.Text type="secondary">Зп</Typography.Text>
-                <Typography.Text>
-                  {totalsMonth.salary.toLocaleString("ru-RU")} ₽
-                </Typography.Text>
-              </Flex>
+              {/* Зп + Траты + Итого */}
+              <>
+                <TotalRow
+                  label="Зп"
+                  value={`${totalsMonth.salary.toLocaleString("ru-RU")} ₽`}
+                />
 
-              {/* Начислено */}
-              <Flex justify="space-between">
-                <Typography.Text type="secondary">Начислено</Typography.Text>
-                <Typography.Text>
-                  {(
-                    totalsMonth.cashCollection + totalsMonth.paid
-                  ).toLocaleString("ru-RU")}{" "}
-                  ₽
-                </Typography.Text>
-              </Flex>
+                <TotalRow
+                  label="Траты"
+                  value={`${totalsMonth.expenses.toLocaleString("ru-RU")} ₽`}
+                />
+
+                <TotalRow
+                  label="Итого"
+                  value={`${(totalsMonth.salary + totalsMonth.expenses).toLocaleString("ru-RU")} ₽`}
+                  strong
+                />
+              </>
 
               <Divider style={{ margin: "5px 0" }} />
 
-              {/* Осталось */}
-              <Flex justify="space-between">
-                <Typography.Text strong>Осталось</Typography.Text>
-                <Typography.Text strong>
-                  {`${(totalsMonth.salary + totalsMonth.expenses - (totalsMonth.cashCollection + totalsMonth.paid)).toLocaleString("ru-RU")} ₽`}
-                </Typography.Text>
-              </Flex>
+              {/* Инкас +  Заплатили + Итого */}
+              <>
+                <TotalRow
+                  label="Инкас"
+                  value={`${totalsMonth.cashCollection.toLocaleString("ru-RU")} ₽`}
+                />
+
+                <TotalRow
+                  label="Заплатили"
+                  value={`${totalsMonth.paid.toLocaleString("ru-RU")} ₽`}
+                />
+
+                <TotalRow
+                  label="Итого"
+                  value={`${(totalsMonth.cashCollection + totalsMonth.paid).toLocaleString("ru-RU")} ₽`}
+                  strong
+                />
+              </>
+
+              <Divider style={{ margin: "5px 0" }} />
+
+              <TotalRow
+                label="Осталось"
+                value={`${(totalsMonth.salary + totalsMonth.expenses - (totalsMonth.cashCollection + totalsMonth.paid)).toLocaleString("ru-RU")} ₽`}
+                strong
+              />
             </Flex>
           }
         >
