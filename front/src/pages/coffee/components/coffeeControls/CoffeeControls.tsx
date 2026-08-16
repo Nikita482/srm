@@ -154,10 +154,13 @@ const CoffeeControls = () => {
             <Flex vertical gap={10}>
               <Typography.Text strong>Создать месяц</Typography.Text>
 
-              <Space>
+              <Flex gap={10} style={{ width: 300 }}>
                 <Input
                   size="small"
                   placeholder="Имя месяца:"
+                  maxLength={25}
+                  showCount
+                  style={{ flex: 1 }}
                   value={monthName}
                   onChange={(e) => setMonthName(e.target.value)}
                 />
@@ -173,17 +176,21 @@ const CoffeeControls = () => {
                 >
                   Создать
                 </Button>
-              </Space>
+              </Flex>
 
               <Typography.Text strong>Редактировать имя месяца</Typography.Text>
 
-              <Space>
+              <Flex gap={10} style={{ width: 300 }}>
                 <Input
                   size="small"
                   placeholder="Новое имя месяца:"
+                  maxLength={25}
+                  showCount
+                  style={{ flex: 1 }}
                   value={newMonthName}
                   onChange={(e) => setNewMonthName(e.target.value)}
                 />
+
                 <Button
                   size="small"
                   disabled={!newMonthName.trim()}
@@ -193,7 +200,7 @@ const CoffeeControls = () => {
                 >
                   Сохранить
                 </Button>
-              </Space>
+              </Flex>
 
               <Typography.Text strong>Удалить месяц</Typography.Text>
 
@@ -222,7 +229,9 @@ const CoffeeControls = () => {
                       justify="space-between"
                       style={{ width: "100%" }}
                     >
-                      <Typography.Text>
+                      <Typography.Text
+                        style={{ maxWidth: 260, wordBreak: "break-word" }}
+                      >
                         <CalendarOutlined /> месяц: {month.month}
                       </Typography.Text>
 
