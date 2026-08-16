@@ -19,6 +19,7 @@ import {
 import { formatComment } from "../../utils/formatComment";
 import { operationOptions } from "../../constants/operationOptions";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 const EditableComment = ({
   comments,
@@ -30,6 +31,8 @@ const EditableComment = ({
   editingRow,
   removeComment,
 }) => {
+  const [pickerValue, setPickerValue] = useState(dayjs());
+
   return (
     <Flex vertical gap={4} align="flex-start">
       <Flex gap={10}>
@@ -74,6 +77,8 @@ const EditableComment = ({
                   style={{ flex: 1 }}
                   placement="bottomLeft"
                   format="D MMMM"
+                  defaultPickerValue={pickerValue}
+                  onPanelChange={(value) => setPickerValue(value)}
                   value={
                     operationDraft.date
                       ? dayjs(operationDraft.date, "D MMMM")
