@@ -21,7 +21,6 @@ export const useCoffeeRows = () => {
     (state: RootState) => state.coffee.selectedMonthId,
   );
   const [newRow, setNewRow] = useState(initialRow);
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [editingRow, setEditingRow] = useState<CoffeeRow | null>(null);
   const [operationDraft, setOperationDraft] = useState({
     type: "",
@@ -56,8 +55,6 @@ export const useCoffeeRows = () => {
         ? prev.date
         : [...prev.date, selectedDay],
     }));
-
-    setSelectedDate(null);
   };
 
   // крестик у тегов при выборе дней недели
@@ -170,7 +167,6 @@ export const useCoffeeRows = () => {
     newRow,
     handleDateChange,
     removeDate,
-    selectedDate,
     setNewRow,
     editingRow,
     setEditingRow,

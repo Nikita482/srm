@@ -187,7 +187,11 @@ const EditableComment = ({
                               <div style={{ maxWidth: 250 }}>
                                 <Divider style={{ margin: "5px 0" }} />
                                 <p>{`Комент: ${info}`}</p>
-                                <p>{`Текст: ${formatted.text}`}</p>
+                                <p>
+                                  {!formatted.text
+                                    ? null
+                                    : `Текст: ${formatted.text}`}
+                                </p>
                                 <Divider style={{ margin: "5px 0" }} />
                                 <p>Комент будет удален безвозвратно!</p>
                               </div>

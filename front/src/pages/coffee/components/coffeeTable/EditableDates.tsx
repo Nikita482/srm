@@ -14,6 +14,8 @@ import {
   DeleteOutlined,
   EditOutlined,
 } from "@ant-design/icons";
+import dayjs from "dayjs";
+import { useState } from "react";
 
 const EditableDates = ({
   dates,
@@ -23,6 +25,8 @@ const EditableDates = ({
   addEditDate,
   removeEditDate,
 }) => {
+  const [pickerValue, setPickerValue] = useState(dayjs());
+
   return (
     <Space>
       <Popover
@@ -50,6 +54,16 @@ const EditableDates = ({
                 addEditDate(day.date());
               }}
               disabled={editingRow?.date.length >= 7}
+              defaultPickerValue={pickerValue}
+              onPanelChange={(value) => setPickerValue(value)}
+              value={null}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const input = e.target as HTMLInputElement;
+                  input.blur();
+                  setTimeout(() => input.focus(), 100);
+                }
+              }}
             />
 
             {/* удаление дней недели */}

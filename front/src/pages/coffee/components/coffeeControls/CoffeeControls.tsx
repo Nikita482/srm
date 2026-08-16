@@ -15,14 +15,16 @@ import styles from "./coffeeControls.module.css";
 import { useCoffeeMonth } from "../../hooks/useCoffeeMonths";
 import { useCoffeeRows } from "../../hooks/useCoffeeRows";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { setSelectedMonthId } from "../../../../app/store/slices/coffeeSlice";
+import TotalRow from "./TotalRow";
+import dayjs from "dayjs";
 import {
   DeleteOutlined,
   CalendarOutlined,
   BarChartOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import TotalRow from "./TotalRow";
 
 const CoffeeControls = () => {
   const {
@@ -47,13 +49,13 @@ const CoffeeControls = () => {
     newRow,
     handleDateChange,
     removeDate,
-    selectedDate,
     setNewRow,
     getWeeksForDelete,
     deleteRow,
   } = useCoffeeRows();
 
   const dispatch = useDispatch();
+  const [pickerValue, setPickerValue] = useState(dayjs());
 
   return (
     <Flex align="center" gap={8} wrap className={styles.coffee__controls}>
@@ -89,10 +91,19 @@ const CoffeeControls = () => {
                   size="small"
                   placeholder="+ день"
                   placement="bottomLeft"
-                  value={selectedDate}
+                  value={null}
                   allowClear={false}
                   onChange={handleDateChange}
                   disabled={newRow?.date.length >= 7}
+                  defaultPickerValue={pickerValue}
+                  onPanelChange={(value) => setPickerValue(value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const input = e.target as HTMLInputElement;
+                      input.blur();
+                      setTimeout(() => input.focus(), 100);
+                    }
+                  }}
                 />
 
                 <Button
