@@ -118,8 +118,8 @@ export const useCoffeeRows = () => {
   // + Создаёт и добавляет комментарий
   const saveComment = async () => {
     if (!editingRow) return;
-    if (!operationDraft.type || !operationDraft.text || !operationDraft.date)
-      return;
+    // if (!operationDraft.type || !operationDraft.text || !operationDraft.date)
+    if (!operationDraft.type || !operationDraft.date) return;
 
     const newComment = {
       _id: crypto.randomUUID(),

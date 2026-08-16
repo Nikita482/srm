@@ -126,7 +126,7 @@ const EditableComment = ({
                 disabled={
                   !operationDraft.type ||
                   !operationDraft.date ||
-                  !operationDraft.text ||
+                  // !operationDraft.text ||
                   !operationDraft.amount
                 }
                 onClick={saveComment}
@@ -147,7 +147,7 @@ const EditableComment = ({
               >
                 {editingRow?.comment.map((comment, index) => {
                   const formatted = formatComment(comment);
-                  const info = `${formatted.amount} ${formatted.date} ${formatted.operation}`;
+                  const info = `${formatted.amount} ${formatted.operation} ${formatted.date}`;
 
                   return (
                     <Flex key={comment?._id} vertical>
@@ -157,23 +157,25 @@ const EditableComment = ({
                         <Typography.Text>{info}</Typography.Text>
 
                         <Space>
-                          <Popover
-                            content={
-                              <div style={{ maxWidth: 250 }}>
-                                {formatted.text}
-                              </div>
-                            }
-                            trigger="click"
-                            getPopupContainer={(trigger) =>
-                              trigger.parentElement!
-                            }
-                          >
-                            <Button
-                              type="text"
-                              size="small"
-                              icon={<MessageOutlined />}
-                            />
-                          </Popover>
+                          {!formatted.text ? null : (
+                            <Popover
+                              content={
+                                <div style={{ maxWidth: 250 }}>
+                                  {formatted.text}
+                                </div>
+                              }
+                              trigger="click"
+                              getPopupContainer={(trigger) =>
+                                trigger.parentElement!
+                              }
+                            >
+                              <Button
+                                type="text"
+                                size="small"
+                                icon={<MessageOutlined />}
+                              />
+                            </Popover>
+                          )}
 
                           <Popconfirm
                             getPopupContainer={(trigger) =>
