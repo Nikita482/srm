@@ -1,6 +1,6 @@
 import { Flex } from "antd";
 import CoffeeControls from "./components/coffeeControls/CoffeeControls";
-import CoffeeTable from "./components/coffeeTable/CoffeeTable";
+import CoffeeTable from "./components/coffeeTable";
 
 const CoffeePage = () => {
   return (
