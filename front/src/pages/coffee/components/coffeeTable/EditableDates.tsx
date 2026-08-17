@@ -26,6 +26,7 @@ const EditableDates = ({
   removeEditDate,
 }) => {
   const [pickerValue, setPickerValue] = useState(dayjs());
+  const [pickerKey, setPickerKey] = useState(0);
 
   return (
     <Space>
@@ -43,6 +44,8 @@ const EditableDates = ({
           <Flex gap={10} vertical style={{ maxWidth: "270px" }}>
             {/* добовление дней недели */}
             <DatePicker
+              key={pickerKey}
+              autoFocus
               getPopupContainer={(trigger) => trigger.parentElement!}
               size="small"
               placeholder="+ день"
@@ -52,18 +55,11 @@ const EditableDates = ({
               onChange={(day) => {
                 if (!day) return;
                 addEditDate(day.date());
+                setPickerKey((k) => k + 1);
               }}
               disabled={editingRow?.date.length >= 7}
               defaultPickerValue={pickerValue}
               onPanelChange={(value) => setPickerValue(value)}
-              value={null}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  const input = e.target as HTMLInputElement;
-                  input.blur();
-                  setTimeout(() => input.focus(), 100);
-                }
-              }}
             />
 
             {/* удаление дней недели */}

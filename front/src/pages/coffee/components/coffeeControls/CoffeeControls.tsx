@@ -56,6 +56,7 @@ const CoffeeControls = () => {
 
   const dispatch = useDispatch();
   const [pickerValue, setPickerValue] = useState(dayjs());
+  const [pickerKey, setPickerKey] = useState(0);
 
   return (
     <Flex align="center" gap={8} wrap className={styles.coffee__controls}>
@@ -86,24 +87,21 @@ const CoffeeControls = () => {
 
               <Flex justify="space-between" style={{ width: "100%" }} gap={10}>
                 <DatePicker
+                  key={pickerKey}
                   style={{ flex: 1 }}
                   format="D"
                   size="small"
                   placeholder="+ день"
                   placement="bottomLeft"
-                  value={null}
                   allowClear={false}
-                  onChange={handleDateChange}
+                  autoFocus
+                  onChange={(value) => {
+                    handleDateChange(value);
+                    setPickerKey((k) => k + 1);
+                  }}
                   disabled={newRow?.date.length >= 7}
                   defaultPickerValue={pickerValue}
                   onPanelChange={(value) => setPickerValue(value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      const input = e.target as HTMLInputElement;
-                      input.blur();
-                      setTimeout(() => input.focus(), 100);
-                    }
-                  }}
                 />
 
                 <Button

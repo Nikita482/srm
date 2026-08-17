@@ -84,7 +84,10 @@ export const useCoffeeRows = () => {
 
     const dayString = String(day);
 
-    if (editingRow.date.includes(dayString)) return;
+    if (editingRow.date.includes(dayString)) {
+      message.warning("Этот день уже добавлен в неделю");
+      return;
+    }
 
     const updatedRow = {
       ...editingRow,
