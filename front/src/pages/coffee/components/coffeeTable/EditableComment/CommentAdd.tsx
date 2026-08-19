@@ -1,5 +1,13 @@
-import { Button, DatePicker, Flex, Input, InputNumber, Select } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import {
+  Button,
+  DatePicker,
+  Flex,
+  Input,
+  InputNumber,
+  Select,
+  Typography,
+} from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import { operationOptions } from "../../../constants/operationOptions";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -14,14 +22,16 @@ const AddComment = ({
 
   return (
     <>
-      <h1>AddComment</h1>
+      <Flex justify="space-between" align="center">
+        <Typography.Text strong>Добавить комментарий</Typography.Text>
 
-      <Button
-        type="text"
-        size="small"
-        icon={<ArrowLeftOutlined />}
-        onClick={onList}
-      />
+        <Button
+          type="text"
+          size="small"
+          icon={<CloseOutlined />}
+          onClick={onList}
+        />
+      </Flex>
 
       {/* Select + DatePicker */}
       <Flex gap={5}>
@@ -95,6 +105,8 @@ const AddComment = ({
 
       {/* Сохранить */}
       <Button
+        type="primary"
+        block
         disabled={
           !operationDraft.type || !operationDraft.date || !operationDraft.amount
         }

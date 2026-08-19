@@ -18,6 +18,7 @@ const CoffeeTable = () => {
     setOperationDraft,
     removeComment,
     saveComment,
+    updateComment,
   } = useCoffeeRows();
 
   const columns = [
@@ -152,6 +153,7 @@ const CoffeeTable = () => {
             saveComment={saveComment}
             editingRow={editingRow}
             removeComment={removeComment}
+            updateComment={updateComment}
           />
         );
       },
@@ -176,6 +178,8 @@ const CoffeeTable = () => {
   if (!months) return <Spin />;
   return (
     <>
+      <div style={{ height: "300px" }}></div>
+
       <Table
         columns={columns}
         dataSource={[...(currentMonth?.data ?? [])]}

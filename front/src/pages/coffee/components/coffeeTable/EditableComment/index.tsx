@@ -14,8 +14,10 @@ const EditableComment = ({
   saveComment,
   editingRow,
   removeComment,
+  updateComment,
 }) => {
   const [mode, setMode] = useState<"list" | "add" | "edit">("list");
+  const [editingComment, setEditingComment] = useState(null);
 
   return (
     <Flex vertical gap={4} align="flex-start">
@@ -40,13 +42,22 @@ const EditableComment = ({
                 <CommentList
                   editingRow={editingRow}
                   onAdd={() => setMode("add")}
-                  onEdit={() => setMode("edit")}
+                  onEdit={(comment) => {
+                    setEditingComment(comment);
+                    setMode("edit");
+                  }}
                   onDelete={removeComment}
                 />
               )}
 
               {mode === "edit" && (
-                <EditComment onList={() => setMode("list")} />
+                <EditComment
+                  onList={() => setMode("list")}
+                  comment={editingComment}
+                  onSave={(commentDraft) => {
+                    updateComment(commentDraft);
+                  }}
+                />
               )}
 
               {mode === "add" && (
@@ -60,7 +71,18 @@ const EditableComment = ({
             </Flex>
           }
         >
-          <Button size="small">
+          <Button
+            size="small"
+            onClick={() => {
+              setOperationDraft({
+                type: "",
+                amount: 0,
+                text: "",
+                date: null,
+              });
+              setMode("list");
+            }}
+          >
             <EditOutlined />
           </Button>
         </Popover>

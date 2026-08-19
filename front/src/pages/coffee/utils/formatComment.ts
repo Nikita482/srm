@@ -1,7 +1,7 @@
 export const formatComment = (comment) => {
   const operationNames = {
     expenses: "Траты",
-    paid: "Закинули",
+    paid: "Заплатили",
     cashCollection: "Инкас",
   };
 

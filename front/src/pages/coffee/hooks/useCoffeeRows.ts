@@ -118,7 +118,6 @@ export const useCoffeeRows = () => {
   // + Создаёт и добавляет комментарий
   const saveComment = async () => {
     if (!editingRow) return;
-    // if (!operationDraft.type || !operationDraft.text || !operationDraft.date)
     if (!operationDraft.type || !operationDraft.date) return;
 
     const newComment = {
@@ -144,6 +143,22 @@ export const useCoffeeRows = () => {
       text: "",
       date: null,
     });
+  };
+
+  // редактирует коментарий
+  const updateComment = async (commentDraft) => {
+    if (!editingRow) return;
+
+    const updatedRow = {
+      ...editingRow,
+      comment: editingRow.comment.map((com) =>
+        com._id === commentDraft._id ? commentDraft : com,
+      ),
+    };
+
+    setEditingRow(updatedRow);
+
+    await saveEditingRow(updatedRow);
   };
 
   // + обновляю всю неделю
@@ -182,5 +197,6 @@ export const useCoffeeRows = () => {
     getWeeksForDelete,
     deleteRow,
     saveComment,
+    updateComment,
   };
 };

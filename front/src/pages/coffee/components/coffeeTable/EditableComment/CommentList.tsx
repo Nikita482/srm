@@ -18,13 +18,11 @@ import { formatComment } from "../../../utils/formatComment";
 const CommentList = ({ editingRow, onAdd, onEdit, onDelete }) => {
   return (
     <>
-      <h1>CommentList</h1>
-
       <Flex
         vertical
         gap={5}
         style={{
-          maxHeight: 175,
+          maxHeight: 250,
           overflowY: "auto",
         }}
       >
@@ -38,11 +36,15 @@ const CommentList = ({ editingRow, onAdd, onEdit, onDelete }) => {
 
               <Flex align="center" justify="space-between">
                 <Typography.Text>{info}</Typography.Text>
+
                 <Space size={5}>
+                  {/* редактирование комента */}
                   <Button
                     size="small"
                     icon={<EditOutlined />}
-                    onClick={onEdit}
+                    onClick={() => {
+                      onEdit(comment);
+                    }}
                   />
 
                   {/* текст комента */}
@@ -96,6 +98,10 @@ const CommentList = ({ editingRow, onAdd, onEdit, onDelete }) => {
           );
         })}
       </Flex>
+
+      {editingRow?.comment.length > 0 && (
+        <Divider style={{ margin: "5px 0" }} />
+      )}
 
       <Button type="dashed" icon={<PlusOutlined />} block onClick={onAdd}>
         Добавить комментарий
