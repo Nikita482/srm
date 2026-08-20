@@ -6,10 +6,6 @@ export const formatComment = (comment) => {
     other: "Другое",
   };
 
-  // console.log(comment);
-
-  // comment.operation === "other" ?
-
   return {
     amount:
       comment.amount === 0

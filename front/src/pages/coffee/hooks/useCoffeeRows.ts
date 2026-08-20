@@ -50,13 +50,13 @@ export const useCoffeeRows = () => {
 
     const selectedDay = String(day.date());
 
-    console.log(selectedDay);
-
     setNewRow((prev) => ({
       ...prev,
       date: prev.date.includes(selectedDay)
         ? prev.date
-        : [...prev.date, selectedDay],
+        : [...prev.date, selectedDay].sort(
+            (currentDay, nextDay) => Number(currentDay) - Number(nextDay),
+          ),
     }));
   };
 
@@ -94,7 +94,9 @@ export const useCoffeeRows = () => {
 
     const updatedRow = {
       ...editingRow,
-      date: [...editingRow.date, dayString],
+      date: [...editingRow.date, dayString].sort(
+        (currentDay, nextDay) => Number(currentDay) - Number(nextDay),
+      ),
     };
 
     setEditingRow(updatedRow);

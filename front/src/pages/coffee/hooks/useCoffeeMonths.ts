@@ -54,6 +54,11 @@ export const useCoffeeMonth = () => {
         item.month.trim().toLowerCase() === newMonthName.trim().toLowerCase(),
     );
 
+    if (currentMonth?.month.trim() === newNameMonth.trim()) {
+      message.info("Имя месяца не изменилось!");
+      return;
+    }
+
     if (exists) {
       message.warning("Месяц с таким названием уже существует!");
       return;
@@ -63,8 +68,6 @@ export const useCoffeeMonth = () => {
       message.warning("Месяц не выбран!");
       return;
     }
-
-    // setNewMonthName("");
 
     await updateMonthRequest({ monthId, newNameMonth }).unwrap();
   };
@@ -137,8 +140,6 @@ export const useCoffeeMonth = () => {
   );
 
   const handleMonthChange = (monthId) => {
-    console.log(monthId);
-
     dispatch(setSelectedMonthId(monthId));
 
     const month = months?.find((month) => month._id === monthId);

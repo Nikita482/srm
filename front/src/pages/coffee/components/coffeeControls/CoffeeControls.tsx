@@ -158,7 +158,20 @@ const CoffeeControls = () => {
         {/* месяцы */}
         <Popover
           open={open}
-          onOpenChange={setOpen}
+          onOpenChange={(isOpen) => {
+            setOpen(isOpen);
+
+            if (isOpen) {
+              setMonthName("");
+              setMonthSearch("");
+
+              const month = months?.find(
+                (month) => month._id === selectedMonthId,
+              );
+
+              setNewMonthName(month?.month ?? "");
+            }
+          }}
           trigger="click"
           styles={{ root: { position: "fixed" } }}
           content={
@@ -208,6 +221,12 @@ const CoffeeControls = () => {
                   style={{ flex: 1 }}
                   value={newMonthName}
                   onChange={(e) => setNewMonthName(e.target.value)}
+                  onPressEnter={async () => {
+                    if (!newMonthName.trim()) return;
+
+                    await updateMonth(selectedMonthId, newMonthName);
+                    setOpen(false);
+                  }}
                 />
 
                 <Button
@@ -275,17 +294,7 @@ const CoffeeControls = () => {
             </Flex>
           }
         >
-          <Button
-            icon={<CalendarOutlined />}
-            size="small"
-            onClick={() => {
-              const month = months?.find(
-                (month) => month._id === selectedMonthId,
-              );
-
-              setNewMonthName(month?.month ?? "");
-            }}
-          />
+          <Button icon={<CalendarOutlined />} size="small" />
         </Popover>
 
         {/* итоги */}
@@ -360,7 +369,11 @@ const CoffeeControls = () => {
             </Flex>
           }
         >
-          <Button icon={<BarChartOutlined />} size="small" />
+          <Button
+            icon={<BarChartOutlined />}
+            size="small"
+            disabled={!months?.length}
+          />
         </Popover>
       </Flex>
     </Flex>
