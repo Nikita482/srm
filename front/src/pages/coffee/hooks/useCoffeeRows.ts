@@ -11,6 +11,7 @@ import type { Dayjs } from "dayjs";
 import type { CoffeeRow } from "../types/coffee";
 import { initialRow } from "../constants/initialRow";
 import { message } from "antd";
+import dayjs from "dayjs";
 
 export const useCoffeeRows = () => {
   const [addRowRequest] = useAddRowMutation();
@@ -23,10 +24,10 @@ export const useCoffeeRows = () => {
   const [newRow, setNewRow] = useState(initialRow);
   const [editingRow, setEditingRow] = useState<CoffeeRow | null>(null);
   const [operationDraft, setOperationDraft] = useState({
-    type: "",
+    type: "paid",
     amount: 0,
     text: "",
-    date: null as string | null,
+    date: dayjs().format("D MMMM"),
   });
 
   // добавление новой строки в месяц
@@ -117,8 +118,7 @@ export const useCoffeeRows = () => {
 
   // + Создаёт и добавляет комментарий
   const saveComment = async () => {
-    if (!editingRow) return;
-    if (!operationDraft.type || !operationDraft.date) return;
+    if (!editingRow || !operationDraft.type) return;
 
     const newComment = {
       _id: crypto.randomUUID(),
@@ -138,10 +138,10 @@ export const useCoffeeRows = () => {
     await saveEditingRow(updatedRow);
 
     setOperationDraft({
-      type: "",
+      type: "paid",
       amount: 0,
       text: "",
-      date: null,
+      date: dayjs().format("D MMMM"),
     });
   };
 

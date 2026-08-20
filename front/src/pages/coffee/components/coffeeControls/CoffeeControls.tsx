@@ -57,6 +57,7 @@ const CoffeeControls = () => {
   const dispatch = useDispatch();
   const [pickerValue, setPickerValue] = useState(dayjs());
   const [pickerKey, setPickerKey] = useState(0);
+  const [open, setOpen] = useState(false);
 
   return (
     <Flex align="center" gap={8} wrap className={styles.coffee__controls}>
@@ -158,6 +159,8 @@ const CoffeeControls = () => {
 
         {/* месяцы */}
         <Popover
+          open={open}
+          onOpenChange={setOpen}
           trigger="click"
           styles={{ root: { position: "fixed" } }}
           content={
@@ -182,6 +185,7 @@ const CoffeeControls = () => {
                   onClick={async () => {
                     await createMonth(monthName);
                     setNewRow((prev) => ({ ...prev, date: [] }));
+                    setOpen(false);
                   }}
                 >
                   Создать

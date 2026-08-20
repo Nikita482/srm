@@ -3,7 +3,12 @@ export const formatComment = (comment) => {
     expenses: "Траты",
     paid: "Заплатили",
     cashCollection: "Инкас",
+    other: "Другое",
   };
+
+  // console.log(comment);
+
+  // comment.operation === "other" ?
 
   return {
     amount:

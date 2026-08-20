@@ -1,5 +1,6 @@
 import { Button, Flex, Popover, Typography } from "antd";
 import { MessageOutlined, EditOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 import { useState } from "react";
 import CommentList from "./CommentList";
 import AddComment from "./CommentAdd";
@@ -75,10 +76,10 @@ const EditableComment = ({
             size="small"
             onClick={() => {
               setOperationDraft({
-                type: "",
+                type: "paid",
                 amount: 0,
                 text: "",
-                date: null,
+                date: dayjs().format("D MMMM"),
               });
               setMode("list");
             }}

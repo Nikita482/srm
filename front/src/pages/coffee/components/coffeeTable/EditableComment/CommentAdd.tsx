@@ -4,6 +4,7 @@ import {
   Flex,
   Input,
   InputNumber,
+  message,
   Select,
   Typography,
 } from "antd";
@@ -19,6 +20,20 @@ const AddComment = ({
   saveComment,
 }) => {
   const [pickerValue, setPickerValue] = useState(dayjs());
+
+  const handleSave = () => {
+    if (
+      operationDraft.type === "other"
+        ? !operationDraft.text
+        : !operationDraft.type || !operationDraft.date || !operationDraft.amount
+    ) {
+      message.error("Заполните обязательные поля!");
+      return;
+    }
+
+    saveComment();
+    onList();
+  };
 
   return (
     <>
@@ -45,29 +60,36 @@ const AddComment = ({
             setOperationDraft((prev) => ({
               ...prev,
               type: operation,
+              ...(operation === "other" && {
+                date: null,
+                amount: 0,
+              }),
             }))
           }
         />
 
-        <DatePicker
-          getPopupContainer={(trigger) => trigger.parentElement!}
-          size="small"
-          placeholder="День:"
-          style={{ flex: 1 }}
-          placement="bottomLeft"
-          format="D MMMM"
-          defaultPickerValue={pickerValue}
-          onPanelChange={(value) => setPickerValue(value)}
-          value={
-            operationDraft.date ? dayjs(operationDraft.date, "D MMMM") : null
-          }
-          onChange={(day) =>
-            setOperationDraft((prev) => ({
-              ...prev,
-              date: day ? day.format("D MMMM") : null,
-            }))
-          }
-        />
+        {operationDraft.type !== "other" && (
+          <DatePicker
+            getPopupContainer={(trigger) => trigger.parentElement!}
+            size="small"
+            placeholder="День:"
+            style={{ flex: 1 }}
+            placement="bottomLeft"
+            format="D MMMM"
+            defaultPickerValue={pickerValue}
+            onPanelChange={(value) => setPickerValue(value)}
+            value={
+              operationDraft.date ? dayjs(operationDraft.date, "D MMMM") : null
+            }
+            onChange={(day) =>
+              setOperationDraft((prev) => ({
+                ...prev,
+                date: day ? day.format("D MMMM") : null,
+              }))
+            }
+            status={!operationDraft.date ? "error" : ""}
+          />
+        )}
       </Flex>
 
       {/* Input + InputNumber */}
@@ -84,37 +106,36 @@ const AddComment = ({
               text: e.target.value,
             }))
           }
+          status={
+            operationDraft.type === "other" && !operationDraft.text
+              ? "error"
+              : undefined
+          }
         />
 
-        <InputNumber
-          placeholder="Сумма:"
-          formatter={(value) =>
-            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽"
-          }
-          value={operationDraft.amount}
-          onChange={(num) =>
-            setOperationDraft((prev) => ({
-              ...prev,
-              amount: num ?? 0,
-            }))
-          }
-          size="small"
-          style={{ width: "80px", flexShrink: 0 }}
-        />
+        {operationDraft.type !== "other" && (
+          <InputNumber
+            min={0}
+            placeholder="Сумма:"
+            formatter={(value) =>
+              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽"
+            }
+            value={operationDraft.amount}
+            onChange={(num) =>
+              setOperationDraft((prev) => ({
+                ...prev,
+                amount: num ?? 0,
+              }))
+            }
+            size="small"
+            style={{ width: "80px", flexShrink: 0 }}
+            status={!operationDraft.amount ? "error" : ""}
+          />
+        )}
       </Flex>
 
       {/* Сохранить */}
-      <Button
-        type="primary"
-        block
-        disabled={
-          !operationDraft.type || !operationDraft.date || !operationDraft.amount
-        }
-        onClick={() => {
-          saveComment();
-          onList();
-        }}
-      >
+      <Button type="primary" block onClick={handleSave}>
         Сохранить
       </Button>
     </>

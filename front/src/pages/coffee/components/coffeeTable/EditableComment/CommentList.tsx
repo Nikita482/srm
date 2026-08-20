@@ -14,6 +14,7 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { formatComment } from "../../../utils/formatComment";
+import dayjs from "dayjs";
 
 const CommentList = ({ editingRow, onAdd, onEdit, onDelete }) => {
   return (
@@ -26,77 +27,95 @@ const CommentList = ({ editingRow, onAdd, onEdit, onDelete }) => {
           overflowY: "auto",
         }}
       >
-        {editingRow?.comment.map((comment, index) => {
-          const formatted = formatComment(comment);
-          const info = `${formatted.amount} ${formatted.operation} ${formatted.date}`;
+        {[...(editingRow?.comment ?? [])]
+          .sort((a, b) => {
+            if (!a.date) return 1;
+            if (!b.date) return -1;
 
-          return (
-            <Flex key={comment?._id} vertical>
-              {index > 0 && <Divider style={{ margin: "5px 0" }} />}
+            return (
+              dayjs(a.date, "D MMMM").valueOf() -
+              dayjs(b.date, "D MMMM").valueOf()
+            );
+          })
+          .map((comment, index) => {
+            const formatted = formatComment(comment);
+            const info =
+              formatted.operation === "Другое"
+                ? `Другое: ${formatted.text}`
+                : `${formatted.amount} ${formatted.operation} ${formatted.date}`;
 
-              <Flex align="center" justify="space-between">
-                <Typography.Text>{info}</Typography.Text>
+            return (
+              <Flex key={comment?._id} vertical>
+                {index > 0 && <Divider style={{ margin: "5px 0" }} />}
 
-                <Space size={5}>
-                  {/* редактирование комента */}
-                  <Button
-                    size="small"
-                    icon={<EditOutlined />}
-                    onClick={() => {
-                      onEdit(comment);
-                    }}
-                  />
+                <Flex align="center" justify="space-between">
+                  <Typography.Text>{info}</Typography.Text>
 
-                  {/* текст комента */}
-                  {!formatted.text ? null : (
-                    <Popover
-                      content={
-                        <div style={{ maxWidth: 250 }}>{formatted.text}</div>
-                      }
-                      trigger="click"
+                  <Space size={5}>
+                    {/* редактирование комента */}
+                    <Button
+                      size="small"
+                      icon={<EditOutlined />}
+                      onClick={() => {
+                        onEdit(comment);
+                      }}
+                    />
+
+                    {/* текст комента */}
+                    {formatted.operation !== "Другое" && formatted.text && (
+                      <Popover
+                        content={
+                          <div style={{ maxWidth: 250 }}>{formatted.text}</div>
+                        }
+                        trigger="click"
+                        getPopupContainer={(trigger) => trigger.parentElement!}
+                      >
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={<MessageOutlined />}
+                        />
+                      </Popover>
+                    )}
+
+                    {/* удаление комента */}
+                    <Popconfirm
                       getPopupContainer={(trigger) => trigger.parentElement!}
+                      title="Удалить комент?"
+                      okText="Удалить"
+                      description={
+                        <div style={{ maxWidth: 250 }}>
+                          <Divider style={{ margin: "5px 0" }} />
+
+                          <p>{info}</p>
+
+                          {formatted.operation !== "Другое" &&
+                            formatted.text && (
+                              <p>{`Текст: ${formatted.text}`}</p>
+                            )}
+
+                          <Divider style={{ margin: "5px 0" }} />
+
+                          <p>Комент будет удален безвозвратно!</p>
+                        </div>
+                      }
+                      okButtonProps={{ danger: true }}
+                      onConfirm={() => {
+                        onDelete(comment._id);
+                      }}
                     >
                       <Button
-                        type="text"
+                        danger
                         size="small"
-                        icon={<MessageOutlined />}
+                        icon={<DeleteOutlined />}
+                        style={{ minWidth: 24 }}
                       />
-                    </Popover>
-                  )}
-
-                  {/* удаление комента */}
-                  <Popconfirm
-                    getPopupContainer={(trigger) => trigger.parentElement!}
-                    title="Удалить комент?"
-                    okText="Удалить"
-                    description={
-                      <div style={{ maxWidth: 250 }}>
-                        <Divider style={{ margin: "5px 0" }} />
-                        <p>{`Комент: ${info}`}</p>
-                        <p>
-                          {!formatted.text ? null : `Текст: ${formatted.text}`}
-                        </p>
-                        <Divider style={{ margin: "5px 0" }} />
-                        <p>Комент будет удален безвозвратно!</p>
-                      </div>
-                    }
-                    okButtonProps={{ danger: true }}
-                    onConfirm={() => {
-                      onDelete(comment._id);
-                    }}
-                  >
-                    <Button
-                      danger
-                      size="small"
-                      icon={<DeleteOutlined />}
-                      style={{ minWidth: 24 }}
-                    />
-                  </Popconfirm>
-                </Space>
+                    </Popconfirm>
+                  </Space>
+                </Flex>
               </Flex>
-            </Flex>
-          );
-        })}
+            );
+          })}
       </Flex>
 
       {editingRow?.comment.length > 0 && (

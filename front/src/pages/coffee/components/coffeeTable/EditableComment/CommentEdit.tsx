@@ -4,6 +4,7 @@ import {
   Flex,
   Input,
   InputNumber,
+  message,
   Select,
   Typography,
 } from "antd";
@@ -22,8 +23,45 @@ const EditComment = ({ onList, comment, onSave }) => {
   });
 
   const [pickerValue, setPickerValue] = useState(
-    dayjs(comment.date, "D MMMM", "ru"),
+    comment.date ? dayjs(comment.date, "D MMMM") : dayjs(),
   );
+
+  const isChanged =
+    commentDraft.amount !== comment.amount ||
+    commentDraft.date !== comment.date ||
+    commentDraft.operation !== comment.operation ||
+    commentDraft.text !== comment.text;
+
+  const isValid =
+    commentDraft.operation === "other"
+      ? !!commentDraft.text
+      : !!commentDraft.date && !!commentDraft.amount;
+
+  // !!!! что делать с "нечего"
+  const handleSave = () => {
+    if (!isValid) {
+      message.error("Заполни обязательные поля!");
+      return;
+    }
+
+    if (!isChanged) {
+      message.info("Изменений нет!");
+      return;
+    }
+
+    const updatedDraft =
+      commentDraft.operation === "other"
+        ? {
+            ...commentDraft,
+            date: null,
+            amount: 0,
+          }
+        : commentDraft;
+
+    setCommentDraft(updatedDraft);
+    onSave(updatedDraft);
+    onList();
+  };
 
   return (
     <>
@@ -47,27 +85,39 @@ const EditComment = ({ onList, comment, onSave }) => {
           value={commentDraft.operation}
           options={operationOptions}
           onChange={(operation) =>
-            setCommentDraft((prev) => ({ ...prev, operation }))
-          }
-        />
-
-        <DatePicker
-          getPopupContainer={(trigger) => trigger.parentElement!}
-          size="small"
-          placeholder="День:"
-          style={{ flex: 1 }}
-          placement="bottomLeft"
-          format="D MMMM"
-          defaultPickerValue={pickerValue}
-          onPanelChange={(value) => setPickerValue(value)}
-          value={commentDraft.date ? dayjs(commentDraft.date, "D MMMM") : null}
-          onChange={(day) =>
             setCommentDraft((prev) => ({
               ...prev,
-              date: day ? day.format("D MMMM") : null,
+              operation,
+              ...(operation !== "other" &&
+                !prev.date && {
+                  date: dayjs().format("D MMMM"),
+                }),
             }))
           }
         />
+
+        {commentDraft.operation !== "other" && (
+          <DatePicker
+            getPopupContainer={(trigger) => trigger.parentElement!}
+            size="small"
+            placeholder="День:"
+            style={{ flex: 1 }}
+            placement="bottomLeft"
+            format="D MMMM"
+            defaultPickerValue={pickerValue}
+            onPanelChange={(value) => setPickerValue(value)}
+            value={
+              commentDraft.date ? dayjs(commentDraft.date, "D MMMM") : null
+            }
+            onChange={(day) =>
+              setCommentDraft((prev) => ({
+                ...prev,
+                date: day ? day.format("D MMMM") : null,
+              }))
+            }
+            status={!commentDraft.date ? "error" : ""}
+          />
+        )}
       </Flex>
 
       {/* Input + InputNumber */}
@@ -84,37 +134,36 @@ const EditComment = ({ onList, comment, onSave }) => {
               text: e.target.value,
             }))
           }
+          status={
+            commentDraft.operation === "other" && !commentDraft.text
+              ? "error"
+              : undefined
+          }
         />
 
-        <InputNumber
-          placeholder="Сумма:"
-          formatter={(value) =>
-            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽"
-          }
-          value={commentDraft.amount}
-          onChange={(num) =>
-            setCommentDraft((prev) => ({
-              ...prev,
-              amount: num ?? 0,
-            }))
-          }
-          size="small"
-          style={{ width: "80px", flexShrink: 0 }}
-        />
+        {commentDraft.operation !== "other" && (
+          <InputNumber
+            min={0}
+            placeholder="Сумма:"
+            formatter={(value) =>
+              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽"
+            }
+            value={commentDraft.amount}
+            onChange={(num) =>
+              setCommentDraft((prev) => ({
+                ...prev,
+                amount: num ?? 0,
+              }))
+            }
+            size="small"
+            style={{ width: "80px", flexShrink: 0 }}
+            status={!commentDraft.amount ? "error" : ""}
+          />
+        )}
       </Flex>
 
       {/* Сохранить */}
-      <Button
-        type="primary"
-        block
-        // disabled={
-        //   !operationDraft.type || !operationDraft.date || !operationDraft.amount
-        // }
-        onClick={() => {
-          onSave(commentDraft);
-          onList();
-        }}
-      >
+      <Button type="primary" block onClick={handleSave}>
         Сохранить
       </Button>
     </>
