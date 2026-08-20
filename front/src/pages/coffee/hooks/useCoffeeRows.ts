@@ -50,6 +50,8 @@ export const useCoffeeRows = () => {
 
     const selectedDay = String(day.date());
 
+    console.log(selectedDay);
+
     setNewRow((prev) => ({
       ...prev,
       date: prev.date.includes(selectedDay)

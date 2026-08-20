@@ -14,9 +14,7 @@ import {
 import styles from "./coffeeControls.module.css";
 import { useCoffeeMonth } from "../../hooks/useCoffeeMonths";
 import { useCoffeeRows } from "../../hooks/useCoffeeRows";
-import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { setSelectedMonthId } from "../../../../app/store/slices/coffeeSlice";
 import TotalRow from "./TotalRow";
 import dayjs from "dayjs";
 import {
@@ -42,6 +40,7 @@ const CoffeeControls = () => {
     setMonthName,
     newMonthName,
     setNewMonthName,
+    handleMonthChange,
   } = useCoffeeMonth();
 
   const {
@@ -54,7 +53,6 @@ const CoffeeControls = () => {
     deleteRow,
   } = useCoffeeRows();
 
-  const dispatch = useDispatch();
   const [pickerValue, setPickerValue] = useState(dayjs());
   const [pickerKey, setPickerKey] = useState(0);
   const [open, setOpen] = useState(false);
@@ -70,7 +68,7 @@ const CoffeeControls = () => {
         size="small"
         value={selectedMonthId}
         options={monthOptions}
-        onChange={(monthId) => dispatch(setSelectedMonthId(monthId))}
+        onChange={handleMonthChange}
         showSearch={{
           filterOption: (input, option) =>
             option.label.toLowerCase().includes(input.toLowerCase()),
@@ -215,8 +213,9 @@ const CoffeeControls = () => {
                 <Button
                   size="small"
                   disabled={!newMonthName.trim()}
-                  onClick={() => {
-                    updateMonth(selectedMonthId, newMonthName);
+                  onClick={async () => {
+                    await updateMonth(selectedMonthId, newMonthName);
+                    setOpen(false);
                   }}
                 >
                   Сохранить
@@ -262,7 +261,10 @@ const CoffeeControls = () => {
                         description="Mесяц будет удален безвозвратно!"
                         okText="Удалить"
                         okButtonProps={{ danger: true }}
-                        onConfirm={() => deleteMonth(month._id)}
+                        onConfirm={() => {
+                          deleteMonth(month._id);
+                          setOpen(false);
+                        }}
                       >
                         <Button danger size="small" icon={<DeleteOutlined />} />
                       </Popconfirm>
@@ -273,7 +275,17 @@ const CoffeeControls = () => {
             </Flex>
           }
         >
-          <Button icon={<CalendarOutlined />} size="small" />
+          <Button
+            icon={<CalendarOutlined />}
+            size="small"
+            onClick={() => {
+              const month = months?.find(
+                (month) => month._id === selectedMonthId,
+              );
+
+              setNewMonthName(month?.month ?? "");
+            }}
+          />
         </Popover>
 
         {/* итоги */}

@@ -64,13 +64,10 @@ export const useCoffeeMonth = () => {
       return;
     }
 
-    setNewMonthName("");
+    // setNewMonthName("");
 
     await updateMonthRequest({ monthId, newNameMonth }).unwrap();
   };
-
-  // ищу выбраный месяц по селекту
-  const currentMonth = months?.find((month) => month._id === selectedMonthId);
 
   // опции для выбора месяца (селекта)
   const monthOptions =
@@ -116,6 +113,9 @@ export const useCoffeeMonth = () => {
     setMonthSearch("");
   };
 
+  // ищу выбраный месяц по селекту
+  const currentMonth = months?.find((month) => month._id === selectedMonthId);
+
   // итоги выброного месяца
   const totalsMonth = (currentMonth?.data ?? []).reduce(
     (sum, row) => ({
@@ -136,6 +136,16 @@ export const useCoffeeMonth = () => {
     },
   );
 
+  const handleMonthChange = (monthId) => {
+    console.log(monthId);
+
+    dispatch(setSelectedMonthId(monthId));
+
+    const month = months?.find((month) => month._id === monthId);
+
+    setNewMonthName(month?.month ?? "");
+  };
+
   return {
     createMonth,
     months,
@@ -152,5 +162,6 @@ export const useCoffeeMonth = () => {
     setMonthName,
     newMonthName,
     setNewMonthName,
+    handleMonthChange,
   };
 };

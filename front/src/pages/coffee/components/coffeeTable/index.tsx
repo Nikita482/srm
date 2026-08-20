@@ -178,8 +178,6 @@ const CoffeeTable = () => {
   if (!months) return <Spin />;
   return (
     <>
-      <div style={{ height: "300px" }}></div>
-
       <Table
         columns={columns}
         dataSource={[...(currentMonth?.data ?? [])]}
@@ -188,8 +186,6 @@ const CoffeeTable = () => {
         pagination={false}
         scroll={{ x: "max-content" }}
       />
-
-      <div style={{ height: "1000px" }}></div>
     </>
   );
 };
