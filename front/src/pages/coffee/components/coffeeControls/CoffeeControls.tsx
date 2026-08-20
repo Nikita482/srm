@@ -176,6 +176,13 @@ const CoffeeControls = () => {
                   style={{ flex: 1 }}
                   value={monthName}
                   onChange={(e) => setMonthName(e.target.value)}
+                  onPressEnter={async () => {
+                    if (!monthName.trim()) return;
+
+                    await createMonth(monthName);
+                    setNewRow((prev) => ({ ...prev, date: [] }));
+                    setOpen(false);
+                  }}
                 />
 
                 <Button
