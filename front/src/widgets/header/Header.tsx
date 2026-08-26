@@ -10,13 +10,15 @@ const Header = () => {
       label: "Календарь",
     },
     {
-      key: "/coffee",
-      label: "Кофейня",
+      // key: "/coffee",
+      // label: "Кофейня",
+      key: "/finance",
+      label: "Финансы",
     },
-    {
-      key: "/goals",
-      label: "Цели",
-    },
+    // {
+    //   key: "/goals",
+    //   label: "Цели",
+    // },
   ];
 
   // добавить расоды доходы и тд
